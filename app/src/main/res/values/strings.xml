@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SimpleMovieApplication</string>
+    <string name="real_app_name">Movie App</string>
+    <string name="hamburger_menu_title">Hamburger</string>
+    <string name="latest">LATEST</string>
+    <string name="recent">RECENT MOVIES</string>
+    <string name="popular">POPULAR</string>
+</resources>

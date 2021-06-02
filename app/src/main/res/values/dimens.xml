@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="image_view_layout_width">146dp</dimen>
+    <dimen name="image_view_layout_height">216dp</dimen>
+
+    <dimen name="rating_bar_layout_width">167dp</dimen>
+    <dimen name="rating_bar_layout_height">18dp</dimen>
+    <dimen name="rating_bar_left_margin">24dp</dimen>
+
+    <dimen name="margin_8dp">8dp</dimen>
+    <dimen name="margin_12dp">12dp</dimen>
+    <dimen name="margin_16dp">16dp</dimen>
+    <dimen name="margin_20dp">20dp</dimen>
+    <dimen name="margin_24dp">24dp</dimen>
+
+    <dimen name="ratingBar_text_size">16sp</dimen>
+    <dimen name="movie_title_text_size">24sp</dimen>
+    <dimen name="movie_info_text_size">18sp</dimen>
+
+
+</resources>
