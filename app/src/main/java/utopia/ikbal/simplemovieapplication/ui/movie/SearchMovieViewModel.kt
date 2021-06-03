@@ -32,10 +32,14 @@ class SearchMovieViewModel : BaseViewModel() {
             }
             .subscribe({
                 totalPages = it.totalPages
-                _movieListLiveData.value = NetworkResult.Data(it.results)
-                isLastPage = (page == totalPages)
-                page++
-                loadAfter()
+                if (it.results?.isEmpty() == true)
+                    _movieListLiveData.value = NetworkResult.Empty
+                else {
+                    _movieListLiveData.value = NetworkResult.Data(it.results)
+                    isLastPage = (page == totalPages)
+                    page++
+                    loadAfter()
+                }
             }, {
                 _movieListLiveData.value = NetworkResult.Error(it)
                 loading = false

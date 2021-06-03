@@ -9,9 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_movie.*
 import kotlinx.android.synthetic.main.fragment_search_movie.*
-import kotlinx.android.synthetic.main.item_movie.*
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.MovieData
 import utopia.ikbal.simplemovieapplication.extensions.*
@@ -32,6 +30,9 @@ class SearchMovieFragment : BaseFragment() {
             ::showLoading,
             ::hideLoading,
             { list -> list?.let { it1 -> adapter.submitList(it1) } },
+            noData = {
+                Toast.makeText(requireContext(), " alksdja", Toast.LENGTH_SHORT).show()
+            },
             { showGenericError("Error") }
         )
     }
@@ -82,7 +83,6 @@ class SearchMovieFragment : BaseFragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                adapter.filter.filter(newText)
                 return false
             }
 

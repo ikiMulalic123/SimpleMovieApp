@@ -11,7 +11,7 @@ import utopia.ikbal.simplemovieapplication.data.MovieData
 import java.util.*
 
 class MovieAdapter(private val context: Context) :
-    RecyclerView.Adapter<MovieViewHolder>(), Filterable {
+    RecyclerView.Adapter<MovieViewHolder>() {
 
     var movieClickListener: OnMovieClickListener? = null
     private val requestManager = Glide.with(context)
@@ -35,34 +35,6 @@ class MovieAdapter(private val context: Context) :
     }
 
     override fun getItemCount() = movieList.size
-
-    override fun getFilter(): Filter {
-        return object : Filter() {
-            override fun performFiltering(constraint: CharSequence?): FilterResults {
-                movieFilterList = if(constraint?.isEmpty() == true) {
-                    movieList
-                } else {
-                    val resultList = mutableListOf<MovieData>()
-                    for (row in movieList) {
-                        if(row.original_title?.toLowerCase(Locale.ROOT)?.contains(constraint.toString()
-                                .toLowerCase(Locale.ROOT)) == true) {
-                            resultList.add(row)
-                        }
-                    }
-                    resultList
-                }
-                val filterResults = FilterResults()
-                filterResults.values = movieFilterList
-                return filterResults
-            }
-
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                movieFilterList = results?.values as MutableList<MovieData>
-                notifyDataSetChanged()
-            }
-
-        }
-    }
 
     fun submitList(movies: List<MovieData>) {
         movieList.addAll(movies)

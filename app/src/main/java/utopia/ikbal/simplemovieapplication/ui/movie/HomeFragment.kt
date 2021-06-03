@@ -14,16 +14,16 @@ import utopia.ikbal.simplemovieapplication.extensions.navigateTo
 import utopia.ikbal.simplemovieapplication.ui.adapter.MovieFragmentAdapter
 import utopia.ikbal.simplemovieapplication.ui.base.BaseFragment
 
-class HomeFragment : BaseFragment(), OnOptionClickListener {
+class HomeFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var adapter: MovieFragmentAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? =
-         inflater.inflate(R.layout.fragment_home, container, false)
+        inflater.inflate(R.layout.fragment_home, container, false)
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,8 +33,8 @@ class HomeFragment : BaseFragment(), OnOptionClickListener {
         initClickListener()
     }
 
-    override fun onOptionClick(view: View?) {
-        when (view?.id) {
+    override fun onClick(v: View?) {
+        when (v?.id) {
             R.id.img_nav_menu -> Toast.makeText(requireContext(),
                 "You clicked on navigation",
                 Toast.LENGTH_SHORT).show()
@@ -46,9 +46,9 @@ class HomeFragment : BaseFragment(), OnOptionClickListener {
     }
 
     private fun initClickListener() {
-        img_nav_menu.setOnClickListener { onOptionClick(img_nav_menu) }
-        img_search.setOnClickListener { onOptionClick(img_search) }
-        img_three_dots.setOnClickListener { onOptionClick(img_three_dots) }
+        img_nav_menu.setOnClickListener(this)
+        img_search.setOnClickListener(this)
+        img_three_dots.setOnClickListener(this)
     }
 
     private fun initTabLayout() {
