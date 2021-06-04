@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.toolbar.*
 import utopia.ikbal.simplemovieapplication.R
@@ -14,6 +15,7 @@ import utopia.ikbal.simplemovieapplication.extensions.navigateTo
 import utopia.ikbal.simplemovieapplication.ui.adapter.MovieFragmentAdapter
 import utopia.ikbal.simplemovieapplication.ui.base.BaseFragment
 
+@AndroidEntryPoint
 class HomeFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var adapter: MovieFragmentAdapter

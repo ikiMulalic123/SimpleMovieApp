@@ -5,4 +5,7 @@
     <string name="latest">LATEST</string>
     <string name="recent">RECENT MOVIES</string>
     <string name="popular">POPULAR</string>
+    <string name="no_results_found">No results found \n try typing a movie name in search</string>
+    <string name="no_results_for_such_criteria">No results for such criteria</string>
+    <string name="type_something">Type something here...</string>
 </resources>

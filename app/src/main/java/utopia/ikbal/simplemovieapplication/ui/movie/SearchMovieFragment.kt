@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search_movie.*
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.MovieData
@@ -19,6 +20,7 @@ import utopia.ikbal.simplemovieapplication.ui.base.BaseFragment
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
 import utopia.ikbal.simplemovieapplication.util.PaginationScrollListener
 
+@AndroidEntryPoint
 class SearchMovieFragment : BaseFragment() {
 
     private lateinit var searchMovieViewModel: SearchMovieViewModel
@@ -31,7 +33,7 @@ class SearchMovieFragment : BaseFragment() {
             ::hideLoading,
             { list -> list?.let { it1 -> adapter.submitList(it1) } },
             noData = {
-                Toast.makeText(requireContext(), " alksdja", Toast.LENGTH_SHORT).show()
+                showNoResultsFound(true)
             },
             { showGenericError("Error") }
         )
@@ -43,7 +45,6 @@ class SearchMovieFragment : BaseFragment() {
         savedInstanceState: Bundle?,
     ): View? =
         inflater.inflate(R.layout.fragment_search_movie, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,8 +63,15 @@ class SearchMovieFragment : BaseFragment() {
         progress_bar_search.gone()
     }
 
-    private fun initOnBackPressedDispatcher() {
-        this.addOnBackPressedDispatcher { onBackPressed() }
+    private fun showNoResultsFound(issue: Boolean) {
+        if (issue) {
+            text_view_no_results_found.text = getString(R.string.no_results_for_such_criteria)
+        }
+        no_results_linear_layout.visible()
+    }
+
+    private fun hideNoResultsFound() {
+        no_results_linear_layout.gone()
     }
 
     private fun onBackPressed() {
@@ -72,13 +80,18 @@ class SearchMovieFragment : BaseFragment() {
         }
     }
 
+    private fun initOnBackPressedDispatcher() {
+        this.addOnBackPressedDispatcher { onBackPressed() }
+    }
+
     private fun initSearchView() {
-        searchView.isIconified = false
+        showNoResultsFound(false)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 adapter.clearList()
                 query?.let { searchMovieViewModel.loadInitial(it) }
                 searchView.clearFocus()
+                hideNoResultsFound()
                 return false
             }
 

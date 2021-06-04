@@ -6,6 +6,6 @@ import utopia.ikbal.simplemovieapplication.util.NetworkResultProcessor
 
 open class BaseFragment : Fragment(), NetworkResultProcessor {
     override fun showGenericError(message: String) {
-        Toast.makeText(context,message,Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 }

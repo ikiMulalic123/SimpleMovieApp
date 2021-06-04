@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_movie.*
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.MovieData
@@ -22,6 +24,7 @@ import utopia.ikbal.simplemovieapplication.ui.base.BaseFragment
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
 import utopia.ikbal.simplemovieapplication.util.PaginationScrollListener
 
+@AndroidEntryPoint
 class MovieFragment : BaseFragment() {
 
     private lateinit var movieViewModel: MovieViewModel

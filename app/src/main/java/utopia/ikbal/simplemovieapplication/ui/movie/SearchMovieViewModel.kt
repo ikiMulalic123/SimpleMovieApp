@@ -2,16 +2,22 @@ package utopia.ikbal.simplemovieapplication.ui.movie
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Single
 import utopia.ikbal.simplemovieapplication.data.Constants.Companion.TOKEN
 import utopia.ikbal.simplemovieapplication.data.MovieData
 import utopia.ikbal.simplemovieapplication.data.MovieList
 import utopia.ikbal.simplemovieapplication.extensions.applySchedulers
 import utopia.ikbal.simplemovieapplication.network.RetrofitProvider
+import utopia.ikbal.simplemovieapplication.repository.MovieRepository
 import utopia.ikbal.simplemovieapplication.ui.base.BaseViewModel
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
+import javax.inject.Inject
 
-class SearchMovieViewModel : BaseViewModel() {
+@HiltViewModel
+class SearchMovieViewModel
+@Inject
+constructor(private val movieRepository: MovieRepository) : BaseViewModel() {
 
     private val _movieListLiveData = MutableLiveData<NetworkResult<List<MovieData>?>>()
     val movieListLiveData: LiveData<NetworkResult<List<MovieData>?>> = _movieListLiveData
@@ -24,7 +30,7 @@ class SearchMovieViewModel : BaseViewModel() {
     fun loadInitial(query: String) {
         page = 1
         this.query = query
-        addToDisposable(getSingle()
+        addToDisposable(movieRepository.getSearchedMovies(page, query)
             .applySchedulers(scheduler)
             .doOnSubscribe {
                 loading = true
@@ -48,7 +54,7 @@ class SearchMovieViewModel : BaseViewModel() {
     }
 
     fun loadAfter() {
-        addToDisposable(getSingle()
+        addToDisposable(movieRepository.getSearchedMovies(page, query)
             .applySchedulers(scheduler)
             .doOnSubscribe {
                 loading = true
@@ -65,8 +71,8 @@ class SearchMovieViewModel : BaseViewModel() {
             })
         )
     }
-
+/*
     private fun getSingle(): Single<MovieList> {
         return RetrofitProvider.searchMovieApi.getFilteredMovies(TOKEN, page, query)
-    }
+    }*/
 }
