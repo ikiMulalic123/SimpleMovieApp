@@ -8,4 +8,6 @@
     <string name="no_results_found">No results found \n try typing a movie name in search</string>
     <string name="no_results_for_such_criteria">No results for such criteria</string>
     <string name="type_something">Type something here...</string>
+    <string name="three_dots_clicked">You clicked on three dots</string>
+    <string name="navigation_clicked">You clicked on navigation</string>
 </resources>

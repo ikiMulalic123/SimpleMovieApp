@@ -18,15 +18,12 @@ import utopia.ikbal.simplemovieapplication.ui.base.BaseFragment
 @AndroidEntryPoint
 class HomeFragment : BaseFragment(), View.OnClickListener {
 
-    private lateinit var adapter: MovieFragmentAdapter
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? =
         inflater.inflate(R.layout.fragment_home, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,16 +32,28 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
         initClickListener()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        clearInstances()
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.img_nav_menu -> Toast.makeText(requireContext(),
-                "You clicked on navigation",
+                getString(R.string.navigation_clicked),
                 Toast.LENGTH_SHORT).show()
             R.id.img_search -> this.navigateTo(R.id.action_homeFragment_to_searchMovieFragment)
             R.id.img_three_dots -> Toast.makeText(requireContext(),
-                "You clicked on three dots",
+                getString(R.string.three_dots_clicked),
                 Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun clearInstances() {
+        img_nav_menu.setOnClickListener(null)
+        img_search.setOnClickListener(null)
+        img_three_dots.setOnClickListener(null)
+        view_pager.adapter = null
     }
 
     private fun initClickListener() {
@@ -60,7 +69,6 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun initViewPager() {
-        adapter = MovieFragmentAdapter(childFragmentManager, lifecycle)
-        view_pager.adapter = adapter
+        view_pager.adapter =  MovieFragmentAdapter(childFragmentManager, lifecycle)
     }
 }

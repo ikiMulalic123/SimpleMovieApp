@@ -10,7 +10,7 @@ import utopia.ikbal.simplemovieapplication.network.SearchMovieApi
 class MovieRepository
 constructor(
     private val movieApi: MovieApi,
-    private val searchMovieApi: SearchMovieApi
+    private val searchMovieApi: SearchMovieApi,
 ) {
 
     fun getMovies(fragmentType: MovieFragmentType, page: Int): Single<MovieList> {
@@ -28,6 +28,6 @@ constructor(
     }
 
     fun getSearchedMovies(page: Int, query: String): Single<MovieList> {
-        return searchMovieApi.getFilteredMovies(TOKEN, page,query)
+        return searchMovieApi.getFilteredMovies(TOKEN, page, query)
     }
 }

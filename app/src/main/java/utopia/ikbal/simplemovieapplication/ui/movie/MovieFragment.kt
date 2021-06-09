@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,7 +35,7 @@ class MovieFragment : BaseFragment() {
             ::showLoading,
             ::hideLoading,
             { list -> list?.let { it1 -> adapter.submitList(it1) } },
-            { showGenericError("Error") })
+            { showGenericError("Something went wrong") })
     }
 
     override fun onCreateView(
@@ -57,7 +56,7 @@ class MovieFragment : BaseFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        recycler_view_fragment.adapter = null
+        adapter.clearList()
     }
 
     private fun initSwipeRefresh() {
@@ -113,6 +112,7 @@ class MovieFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
+        //provjeriti neki bolji nacin da se inject viewmodel u fragmentu
         movieViewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
         movieViewModel.loadInitial(getMovieType())
     }

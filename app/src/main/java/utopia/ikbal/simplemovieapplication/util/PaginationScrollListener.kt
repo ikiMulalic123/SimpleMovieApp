@@ -1,6 +1,5 @@
 package utopia.ikbal.simplemovieapplication.util
 
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -19,6 +18,7 @@ abstract class PaginationScrollListener protected constructor(private val layout
             }
         }
     }
+
     protected abstract fun loadMoreItems()
     abstract val isLastPage: Boolean
     abstract val isLoading: Boolean

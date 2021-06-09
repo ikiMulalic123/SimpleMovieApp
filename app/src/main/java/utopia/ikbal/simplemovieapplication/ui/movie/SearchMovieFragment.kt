@@ -26,7 +26,7 @@ class SearchMovieFragment : BaseFragment() {
     private lateinit var searchMovieViewModel: SearchMovieViewModel
     private lateinit var adapter: MovieAdapter
 
-    private val filteredMovieListObserver = Observer<NetworkResult<List<MovieData>?>> {
+    private val filteredMovieListObserver = Observer<NetworkResult<List<MovieData>?>> { it ->
         processNetworkResult(
             it,
             ::showLoading,
@@ -35,7 +35,8 @@ class SearchMovieFragment : BaseFragment() {
             noData = {
                 showNoResultsFound(true)
             },
-            { showGenericError("Error") }
+            onError = { showGenericError("Something is wrong") }
+            /*{ it1 -> it1.message?.let { it1 -> showGenericError(it1) } }*/
         )
     }
 
@@ -53,6 +54,15 @@ class SearchMovieFragment : BaseFragment() {
         initRecyclerView()
         initSearchView()
         initOnBackPressedDispatcher()
+        if (savedInstanceState != null) {
+            val oldQuery = savedInstanceState.get(QUERY)
+            searchMovieViewModel.loadInitial(oldQuery.toString())
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(QUERY, searchView.query.toString())
     }
 
     private fun showLoading() {
@@ -98,7 +108,6 @@ class SearchMovieFragment : BaseFragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 return false
             }
-
         })
     }
 
@@ -132,5 +141,9 @@ class SearchMovieFragment : BaseFragment() {
         with(searchMovieViewModel) {
             movieListLiveData.observe(viewLifecycleOwner, filteredMovieListObserver)
         }
+    }
+
+    companion object {
+        private const val QUERY = "query"
     }
 }

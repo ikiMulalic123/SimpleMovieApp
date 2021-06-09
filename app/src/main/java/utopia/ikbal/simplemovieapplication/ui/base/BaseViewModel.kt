@@ -12,7 +12,6 @@ abstract class BaseViewModel(protected val scheduler: Scheduler = Schedulers.io(
         CompositeDisposable()
     }
     protected fun addToDisposable(disposable: Disposable) = compositeDisposable.add(disposable)
-    protected fun clearDisposable() = compositeDisposable.clear()
     override fun onCleared() {
         super.onCleared()
         dispose()

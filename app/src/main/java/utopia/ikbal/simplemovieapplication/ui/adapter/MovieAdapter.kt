@@ -2,13 +2,10 @@ package utopia.ikbal.simplemovieapplication.ui.adapter
 
 import android.content.Context
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.MovieData
-import java.util.*
 
 class MovieAdapter(private val context: Context) :
     RecyclerView.Adapter<MovieViewHolder>() {
@@ -16,7 +13,6 @@ class MovieAdapter(private val context: Context) :
     var movieClickListener: OnMovieClickListener? = null
     private val requestManager = Glide.with(context)
     private val movieList = mutableListOf<MovieData>()
-    private var movieFilterList = movieList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         MovieViewHolder(R.layout.item_movie, parent)
