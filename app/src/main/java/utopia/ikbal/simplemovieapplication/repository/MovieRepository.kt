@@ -3,7 +3,7 @@ package utopia.ikbal.simplemovieapplication.repository
 import io.reactivex.Single
 import utopia.ikbal.simplemovieapplication.data.Constants.Companion.TOKEN
 import utopia.ikbal.simplemovieapplication.data.MovieFragmentType
-import utopia.ikbal.simplemovieapplication.data.MovieList
+import utopia.ikbal.simplemovieapplication.data.model.MovieList
 import utopia.ikbal.simplemovieapplication.network.MovieApi
 import utopia.ikbal.simplemovieapplication.network.SearchMovieApi
 

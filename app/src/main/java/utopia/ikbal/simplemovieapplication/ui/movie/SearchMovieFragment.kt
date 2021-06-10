@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search_movie.*
 import utopia.ikbal.simplemovieapplication.R
-import utopia.ikbal.simplemovieapplication.data.MovieData
+import utopia.ikbal.simplemovieapplication.data.model.MovieData
 import utopia.ikbal.simplemovieapplication.extensions.*
 import utopia.ikbal.simplemovieapplication.ui.adapter.MovieAdapter
 import utopia.ikbal.simplemovieapplication.ui.adapter.OnMovieClickListener

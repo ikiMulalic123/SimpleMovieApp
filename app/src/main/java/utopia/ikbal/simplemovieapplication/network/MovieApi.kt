@@ -3,7 +3,7 @@ package utopia.ikbal.simplemovieapplication.network
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
-import utopia.ikbal.simplemovieapplication.data.MovieList
+import utopia.ikbal.simplemovieapplication.data.model.MovieList
 
 interface MovieApi {
     @GET(MOVIE)

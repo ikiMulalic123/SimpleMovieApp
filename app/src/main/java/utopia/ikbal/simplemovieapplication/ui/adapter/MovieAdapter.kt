@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import utopia.ikbal.simplemovieapplication.R
-import utopia.ikbal.simplemovieapplication.data.MovieData
+import utopia.ikbal.simplemovieapplication.data.model.MovieData
 
 class MovieAdapter(private val context: Context) :
     RecyclerView.Adapter<MovieViewHolder>() {

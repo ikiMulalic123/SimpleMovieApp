@@ -3,7 +3,7 @@ package utopia.ikbal.simplemovieapplication.ui.movie
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import utopia.ikbal.simplemovieapplication.data.MovieData
+import utopia.ikbal.simplemovieapplication.data.model.MovieData
 import utopia.ikbal.simplemovieapplication.extensions.applySchedulers
 import utopia.ikbal.simplemovieapplication.repository.MovieRepository
 import utopia.ikbal.simplemovieapplication.ui.base.BaseViewModel

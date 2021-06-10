@@ -1,4 +1,4 @@
-package utopia.ikbal.simplemovieapplication.data
+package utopia.ikbal.simplemovieapplication.data.model
 
 data class MovieData (
     var adult : Boolean,

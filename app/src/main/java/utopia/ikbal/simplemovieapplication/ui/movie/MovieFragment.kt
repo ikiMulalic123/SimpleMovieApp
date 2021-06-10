@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_movie.*
 import utopia.ikbal.simplemovieapplication.R
-import utopia.ikbal.simplemovieapplication.data.MovieData
+import utopia.ikbal.simplemovieapplication.data.model.MovieData
 import utopia.ikbal.simplemovieapplication.data.MovieFragmentType
 import utopia.ikbal.simplemovieapplication.extensions.addOnBackPressedDispatcher
 import utopia.ikbal.simplemovieapplication.extensions.gone
