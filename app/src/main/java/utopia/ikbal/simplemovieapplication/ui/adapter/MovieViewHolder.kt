@@ -18,7 +18,7 @@ class MovieViewHolder(@LayoutRes layout: Int, parent: ViewGroup) :
     RecyclerView.ViewHolder(parent.inflate(layout, false)) {
 
     private val image: ImageView = itemView.findViewById(R.id.img_movie_poster)
-    private val ratingBar: RatingBar = itemView.findViewById(R.id.ratingBar)
+    private val ratingBar: RatingBar = itemView.findViewById(R.id.rating_bar_movie)
     private val ratingBarMarkTV: TextView = itemView.findViewById(R.id.tv_rating)
     private val movieTitleTV: TextView = itemView.findViewById(R.id.tv_title)
     private val movieInfoTV: TextView = itemView.findViewById(R.id.tv_info)

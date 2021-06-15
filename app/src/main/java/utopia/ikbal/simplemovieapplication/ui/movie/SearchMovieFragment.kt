@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_search_movie.*
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.model.MovieData
 import utopia.ikbal.simplemovieapplication.extensions.*
+import utopia.ikbal.simplemovieapplication.ui.MovieDetailsActivity
 import utopia.ikbal.simplemovieapplication.ui.adapter.MovieAdapter
 import utopia.ikbal.simplemovieapplication.ui.adapter.OnMovieClickListener
 import utopia.ikbal.simplemovieapplication.ui.base.BaseFragment
@@ -115,8 +115,7 @@ class SearchMovieFragment : BaseFragment() {
         adapter = MovieAdapter(requireContext())
         adapter.movieClickListener = object : OnMovieClickListener {
             override fun onMovieClick(movieId: Int) {
-                Toast.makeText(requireContext(), "You clicked on $movieId item", Toast.LENGTH_SHORT)
-                    .show()
+                MovieDetailsActivity.launch(requireContext(), movieId)
             }
         }
         recycler_view_search_movie.addOnScrollListener(object :

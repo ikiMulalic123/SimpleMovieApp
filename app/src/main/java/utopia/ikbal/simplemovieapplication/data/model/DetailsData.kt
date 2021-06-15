@@ -4,19 +4,19 @@ import com.google.gson.annotations.SerializedName
 
 data class DetailsData(
     @SerializedName("adult")
-    val adult: Boolean?,
+    val adult: Boolean,
     @SerializedName("backdrop_path")
     val backdrop_path: String? = null,
     @SerializedName("belongs_to_collection")
-    val belongs_to_collection: String? = null,
+    val belongs_to_collection: Any?,
     @SerializedName("budget")
-    val budget: Float?,
+    val budget: Float,
     @SerializedName("genres")
     var genres: List<Any>?,
     @SerializedName("homepage")
     val homepage: String? = null,
     @SerializedName("id")
-    val id: Int?,
+    val id: Int,
     @SerializedName("imdb_id")
     val imdb_id: String? = null,
     @SerializedName("original_language")
@@ -26,7 +26,7 @@ data class DetailsData(
     @SerializedName("overview")
     val overview: String? = null,
     @SerializedName("popularity")
-    val popularity: Float?,
+    val popularity: Float,
     @SerializedName("poster_path")
     val poster_path: String? = null,
     @SerializedName("production_companies")
@@ -36,9 +36,9 @@ data class DetailsData(
     @SerializedName("release_date")
     val release_date: String? = null,
     @SerializedName("revenue")
-    val revenue: Float?,
+    val revenue: Float,
     @SerializedName("runtime")
-    val runtime: Float?,
+    val runtime: Float,
     @SerializedName("spoken_languages")
     var spoken_languages: List<Any>?,
     @SerializedName("status")
@@ -48,9 +48,9 @@ data class DetailsData(
     @SerializedName("title")
     val title: String? = null,
     @SerializedName("video")
-    val video: Boolean?,
+    val video: Boolean,
     @SerializedName("vote_average")
-    val vote_average: Float?,
+    val vote_average: Float,
     @SerializedName("vote_count")
-    val vote_count: Float?,
+    val vote_count: Float,
 )

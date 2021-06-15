@@ -7,6 +7,7 @@ import retrofit2.http.Query
 import utopia.ikbal.simplemovieapplication.data.model.CreditsData
 import utopia.ikbal.simplemovieapplication.data.model.DetailsData
 import utopia.ikbal.simplemovieapplication.data.model.ReviewList
+import utopia.ikbal.simplemovieapplication.data.model.VideoList
 
 interface DetailsApi {
 
@@ -29,6 +30,12 @@ interface DetailsApi {
         @Query(PAGE) page: Int
     ): Single<ReviewList>
 
+    @GET(VIDEOS)
+    fun getVideos(
+        @Path(MOVIE_ID) movieId: Int,
+        @Query(API_KEY) token: String
+    ): Single<VideoList>
+
     companion object {
         private const val API_KEY = "api_key"
         private const val MOVIE = "movie/"
@@ -37,5 +44,6 @@ interface DetailsApi {
         private const val DETAILS = "$MOVIE{$MOVIE_ID}"
         private const val CREDITS = "$DETAILS/credits"
         private const val REVIEWS = "$DETAILS/reviews"
+        private const val VIDEOS = "$DETAILS/videos"
     }
 }

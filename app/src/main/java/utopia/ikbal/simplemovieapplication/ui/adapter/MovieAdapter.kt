@@ -10,9 +10,11 @@ import utopia.ikbal.simplemovieapplication.data.model.MovieData
 class MovieAdapter(private val context: Context) :
     RecyclerView.Adapter<MovieViewHolder>() {
 
-    var movieClickListener: OnMovieClickListener? = null
     private val requestManager = Glide.with(context)
     private val movieList = mutableListOf<MovieData>()
+
+    var movieClickListener: OnMovieClickListener? = null
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         MovieViewHolder(R.layout.item_movie, parent)

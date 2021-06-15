@@ -6,9 +6,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import utopia.ikbal.simplemovieapplication.network.ActorApi
 import utopia.ikbal.simplemovieapplication.network.DetailsApi
 import utopia.ikbal.simplemovieapplication.network.MovieApi
 import utopia.ikbal.simplemovieapplication.network.SearchMovieApi
@@ -30,8 +33,17 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(gson: Gson): Retrofit.Builder {
+    fun provideClient(): OkHttpClient {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        return OkHttpClient.Builder().addInterceptor(interceptor).build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(gson: Gson, client: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
+            .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
     }
@@ -61,5 +73,14 @@ object RetrofitModule {
             .baseUrl(BASE_DETAILS_MOVIE_URL)
             .build()
             .create(DetailsApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideActorMovieService(retrofit: Retrofit.Builder): ActorApi {
+        return retrofit
+            .baseUrl(BASE_DETAILS_MOVIE_URL)
+            .build()
+            .create(ActorApi::class.java)
     }
 }
