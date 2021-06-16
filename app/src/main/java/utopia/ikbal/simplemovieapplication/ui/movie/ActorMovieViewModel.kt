@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import utopia.ikbal.simplemovieapplication.data.model.ActorData
+import utopia.ikbal.simplemovieapplication.data.model.ActorImageData
 import utopia.ikbal.simplemovieapplication.data.model.ActorMovieAsActorData
-import utopia.ikbal.simplemovieapplication.data.model.ActorMovieAsProducerData
 import utopia.ikbal.simplemovieapplication.data.model.ActorSeriesCastData
 import utopia.ikbal.simplemovieapplication.extensions.applySchedulers
 import utopia.ikbal.simplemovieapplication.repository.ActorMovieRepository
@@ -21,18 +21,16 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
     private val _actorLiveData = MutableLiveData<NetworkResult<ActorData>?>()
     private val _actorMovieAsActorLiveData =
         MutableLiveData<NetworkResult<List<ActorMovieAsActorData>?>>()
-    private val _actorMovieAsProducerLiveData =
-        MutableLiveData<NetworkResult<List<ActorMovieAsProducerData>?>>()
     private val _actorSeriesAsActorLiveData =
         MutableLiveData<NetworkResult<List<ActorSeriesCastData>?>>()
+    private val _actorImagesLiveData = MutableLiveData<NetworkResult<List<ActorImageData>?>>()
 
     val actorLiveData: LiveData<NetworkResult<ActorData>?> = _actorLiveData
     val actorMovieAsActorLiveData: LiveData<NetworkResult<List<ActorMovieAsActorData>?>> =
         _actorMovieAsActorLiveData
-    val actorMovieAsProducerLiveData: LiveData<NetworkResult<List<ActorMovieAsProducerData>?>> =
-        _actorMovieAsProducerLiveData
     val actorSeriesAsActorLiveData: LiveData<NetworkResult<List<ActorSeriesCastData>?>> =
         _actorSeriesAsActorLiveData
+    val actorImagesLiveData: LiveData<NetworkResult<List<ActorImageData>?>> = _actorImagesLiveData
 
     var loading: Boolean = false
 
@@ -59,15 +57,12 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
             .doOnSubscribe {
                 loading = true
                 _actorMovieAsActorLiveData.value = NetworkResult.Loading
-                _actorMovieAsProducerLiveData.value = NetworkResult.Loading
             }
             .subscribe({
                 loading = false
                 _actorMovieAsActorLiveData.value = NetworkResult.Data(it.cast)
-                _actorMovieAsProducerLiveData.value = NetworkResult.Data(it.crew)
             }, {
                 _actorMovieAsActorLiveData.value = NetworkResult.Error(it)
-                _actorMovieAsProducerLiveData.value = NetworkResult.Error(it)
                 loading = false
             })
         )
@@ -85,6 +80,23 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
                 _actorSeriesAsActorLiveData.value = NetworkResult.Data(it.cast)
             }, {
                 _actorSeriesAsActorLiveData.value = NetworkResult.Error(it)
+                loading = false
+            })
+        )
+    }
+
+    fun getImages(actorId: Int) {
+        addToDisposable(actorMovieRepository.getActorImages(actorId)
+            .applySchedulers(scheduler)
+            .doOnSubscribe {
+                loading = true
+                _actorImagesLiveData.value = NetworkResult.Loading
+            }
+            .subscribe({
+                loading = false
+                _actorImagesLiveData.value = NetworkResult.Data(it.profiles)
+            }, {
+                _actorImagesLiveData.value = NetworkResult.Error(it)
                 loading = false
             })
         )

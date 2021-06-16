@@ -4,7 +4,7 @@ data class ActorSeriesCastData(
     val backdrop_path: String? = null,
     val first_air_date: String? = null,
     val genre_ids: List<Any>?,
-    val id: Float?,
+    val id: Int?,
     val name: String? = null,
     val origin_country: List<Any>?,
     val original_language: String? = null,

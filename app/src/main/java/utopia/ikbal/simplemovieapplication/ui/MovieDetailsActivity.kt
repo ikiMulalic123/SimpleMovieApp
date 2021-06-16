@@ -95,6 +95,7 @@ class MovieDetailsActivity : BaseActivity() {
 
     }
 
+
     private fun initializeVideo(data1: List<VideoData>?) {
         if (data1?.isEmpty() == true) {
             return

@@ -11,12 +11,25 @@
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/margin_8dp">
 
+        <Toolbar
+            android:id="@+id/toolbar_details_movie"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/rating_star_red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include layout="@layout/toolbar_actor_activity"/>
+
+        </Toolbar>
+
         <ImageView
             android:id="@+id/img_details_poster"
             android:layout_width="match_parent"
             android:layout_height="315dp"
             android:background="@color/fragment_background"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar_details_movie" />
 
         <LinearLayout
             android:id="@+id/ll_img_play"
