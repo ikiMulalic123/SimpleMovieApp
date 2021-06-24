@@ -92,6 +92,9 @@ class SearchMovieFragment : BaseFragment() {
 
     private fun initOnBackPressedDispatcher() {
         this.addOnBackPressedDispatcher { onBackPressed() }
+        searchView.setOnClickListener{
+            navigateUp()
+        }
     }
 
     private fun initSearchView() {

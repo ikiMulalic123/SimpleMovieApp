@@ -15,7 +15,6 @@ class MovieAdapter(private val context: Context) :
 
     var movieClickListener: OnMovieClickListener? = null
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         MovieViewHolder(R.layout.item_movie, parent)
 

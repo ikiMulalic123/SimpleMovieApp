@@ -21,7 +21,6 @@ class ActorMovieViewHolder(@LayoutRes layout: Int, parent: ViewGroup) :
     var requestManager: RequestManager? = null
     var movieClickListener: OnMovieClickListener? = null
 
-
     fun bind(actorMovieAsActorData: ActorMovieAsActorData) {
         itemView.setOnClickListener {
             actorMovieAsActorData.id.let { it1 -> movieClickListener?.onMovieClick(it1) }

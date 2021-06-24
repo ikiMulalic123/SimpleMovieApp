@@ -38,11 +38,6 @@ class DetailsCastAdapter(private val context: Context) :
         notifyDataSetChanged()
     }
 
-    fun clearList() {
-        castList.clear()
-        notifyDataSetChanged()
-    }
-
     private fun getItem(position: Int): CastData? {
         return if (position < castList.size) castList[position]
         else null

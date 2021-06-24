@@ -48,7 +48,7 @@ class MovieActorActivity : BaseActivity() {
             it,
             ::showLoading,
             ::hideLoading,
-            { list -> list?.let { it1 -> actorMovieAdapter.submitList(it1) } },
+            { list -> list?.let { it1 -> actorMovieAdapter.submitList(it1) } } ,
             { showGenericError("Something went wrong") }
         )
     }
@@ -80,13 +80,7 @@ class MovieActorActivity : BaseActivity() {
         initObserver()
         initMovieRecyclerView()
         initSeriesRecyclerView()
-        //initClickListener()
-    }
-
-    private fun initClickListener() {
-        img_actor_back_button.setOnClickListener{
-            //TODO
-        }
+        initOnBackPressed()
     }
 
     private fun showLoading() {
@@ -97,6 +91,10 @@ class MovieActorActivity : BaseActivity() {
 
     }
 
+    private fun initOnBackPressed() {
+        img_actor_back_button.setOnClickListener{finish()}
+    }
+
     private fun submitDetails(data: ActorData) {
         img_actor.load(Constants.BASE_IMAGE_URL + data.profile_path, requestManager)
         tv_actor_title.text = data.name
@@ -105,7 +103,7 @@ class MovieActorActivity : BaseActivity() {
     }
 
     private fun initImages (data: List<ActorImageData>){
-        img_cast_poster.load(Constants.BASE_IMAGE_URL + data[1].file_path, requestManager)
+        if(data.isNotEmpty()) img_cast_poster.load(Constants.BASE_IMAGE_URL + data[data.size - 1].file_path, requestManager)
     }
 
     private fun initSeriesRecyclerView() {
@@ -121,8 +119,8 @@ class MovieActorActivity : BaseActivity() {
     private fun initMovieRecyclerView() {
         actorMovieAdapter = ActorMovieAdapter(this)
         actorMovieAdapter.movieClickListener = object : OnMovieClickListener {
-            override fun onMovieClick(castId: Int) {
-                MovieDetailsActivity.launch(this@MovieActorActivity, castId)
+            override fun onMovieClick(movieId: Int) {
+                MovieDetailsActivity.launch(this@MovieActorActivity, movieId)
             }
         }
         rv_actor_movies.adapter = actorMovieAdapter
@@ -142,10 +140,12 @@ class MovieActorActivity : BaseActivity() {
         if (castId == -1) finish()
         requestManager = Glide.with(this)
         actorMovieViewModel = ViewModelProvider(this).get(ActorMovieViewModel::class.java)
-        actorMovieViewModel.getDetails(castId)
-        actorMovieViewModel.getMoviesAsActor(castId)
-        actorMovieViewModel.getActorSeries(castId)
-        actorMovieViewModel.getImages(castId)
+        with(actorMovieViewModel) {
+            getDetails(castId)
+            getMoviesAsActor(castId)
+            getActorSeries(castId)
+            getImages(castId)
+        }
     }
 
     companion object {

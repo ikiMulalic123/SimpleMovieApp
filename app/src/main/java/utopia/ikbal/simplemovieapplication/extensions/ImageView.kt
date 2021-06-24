@@ -5,7 +5,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import utopia.ikbal.simplemovieapplication.R
 
-fun ImageView.load(url: String, requestManager: RequestManager?) {
+fun ImageView.load(url: String, requestManager: RequestManager? = null) {
     requestManager?.let {
         it.load(url).placeholder(R.color.glide_place_holder).into(this)
     } ?: run {

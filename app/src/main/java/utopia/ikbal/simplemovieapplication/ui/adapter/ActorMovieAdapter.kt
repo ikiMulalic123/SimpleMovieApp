@@ -37,12 +37,7 @@ class ActorMovieAdapter(private val context: Context) :
         moviesList.addAll(movies)
         notifyDataSetChanged()
     }
-
-    fun clearList() {
-        moviesList.clear()
-        notifyDataSetChanged()
-    }
-
+    
     private fun getItem(position: Int): ActorMovieAsActorData? {
         return if (position < moviesList.size) moviesList[position]
         else null

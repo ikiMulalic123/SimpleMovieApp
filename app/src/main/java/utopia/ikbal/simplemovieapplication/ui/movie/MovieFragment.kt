@@ -111,7 +111,6 @@ class MovieFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
-        //provjeriti neki bolji nacin da se inject viewmodel u fragmentu
         movieViewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
         movieViewModel.loadInitial(getMovieType())
     }

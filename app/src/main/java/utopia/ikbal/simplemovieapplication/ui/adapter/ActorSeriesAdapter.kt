@@ -38,11 +38,6 @@ class ActorSeriesAdapter(private val context: Context) :
         notifyDataSetChanged()
     }
 
-    fun clearList() {
-        seriesList.clear()
-        notifyDataSetChanged()
-    }
-
     private fun getItem(position: Int): ActorSeriesCastData? {
         return if (position < seriesList.size) seriesList[position]
         else null

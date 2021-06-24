@@ -14,25 +14,25 @@ interface ActorApi {
     @GET(DETAILS)
     fun getActorDetails(
         @Path(PERSON_ID) personId: Int,
-        @Query(API_KEY) token: String,
+        @Query(API_KEY) token: String
     ): Single<ActorData>
 
     @GET(MOVIES)
     fun getActorMovies(
         @Path(PERSON_ID) personId: Int,
-        @Query(API_KEY) token: String,
+        @Query(API_KEY) token: String
     ): Single<ActorMovieCategory>
 
     @GET(SERIES)
     fun getActorSeries(
         @Path(PERSON_ID) personId: Int,
-        @Query(API_KEY) token: String,
+        @Query(API_KEY) token: String
     ): Single<ActorSeriesData>
 
     @GET(IMAGES)
     fun getActorImages(
         @Path(PERSON_ID) personId: Int,
-        @Query(API_KEY) token: String,
+        @Query(API_KEY) token: String
     ):Single<ActorImageCategory>
 
     companion object {

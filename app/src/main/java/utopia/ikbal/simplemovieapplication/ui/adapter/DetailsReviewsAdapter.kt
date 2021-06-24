@@ -3,10 +3,9 @@ package utopia.ikbal.simplemovieapplication.ui.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import utopia.ikbal.simplemovieapplication.R
-import utopia.ikbal.simplemovieapplication.data.model.CastData
 import utopia.ikbal.simplemovieapplication.data.model.ReviewData
 
-class DetailsReviewsAdapter : RecyclerView.Adapter<DetailsReviewsViewHolder>(){
+class DetailsReviewsAdapter : RecyclerView.Adapter<DetailsReviewsViewHolder>() {
 
     private val reviewsList = mutableListOf<ReviewData>()
 
@@ -23,11 +22,6 @@ class DetailsReviewsAdapter : RecyclerView.Adapter<DetailsReviewsViewHolder>(){
 
     fun submitList(reviews: List<ReviewData>) {
         reviewsList.addAll(reviews)
-        notifyDataSetChanged()
-    }
-
-    fun clearList() {
-        reviewsList.clear()
         notifyDataSetChanged()
     }
 

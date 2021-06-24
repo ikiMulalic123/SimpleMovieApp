@@ -15,5 +15,12 @@
     <string name="reviews">Reviews</string>
     <string name="known_for">Known for</string>
     <string name="tv_series">TV Series</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="rate_movie_rating_fragment">Rate Movie</string>
+    <string name="confirm_rating">Confirm</string>
 
 </resources>

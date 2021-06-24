@@ -10,7 +10,7 @@ interface SearchMovieApi {
     fun getFilteredMovies(
         @Query(API_KEY) token: String,
         @Query(PAGE) page: Int,
-        @Query(QUERY) filter: String,
+        @Query(QUERY) filter: String
     ): Single<MovieList>
 
     companion object {

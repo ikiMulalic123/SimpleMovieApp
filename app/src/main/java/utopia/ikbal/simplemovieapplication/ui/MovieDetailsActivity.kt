@@ -3,6 +3,7 @@ package utopia.ikbal.simplemovieapplication.ui
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.Observer
@@ -13,13 +14,12 @@ import com.bumptech.glide.RequestManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.fragment_movie.*
+import kotlinx.android.synthetic.main.item_movie.*
+import kotlinx.android.synthetic.main.toolbar_details_activity.*
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.Constants
 import utopia.ikbal.simplemovieapplication.data.Constants.Companion.BASE_YOUTUBE_URL
-import utopia.ikbal.simplemovieapplication.data.model.CastData
-import utopia.ikbal.simplemovieapplication.data.model.DetailsData
-import utopia.ikbal.simplemovieapplication.data.model.ReviewData
-import utopia.ikbal.simplemovieapplication.data.model.VideoData
+import utopia.ikbal.simplemovieapplication.data.model.*
 import utopia.ikbal.simplemovieapplication.extensions.load
 import utopia.ikbal.simplemovieapplication.extensions.visible
 import utopia.ikbal.simplemovieapplication.ui.adapter.DetailsCastAdapter
@@ -27,6 +27,7 @@ import utopia.ikbal.simplemovieapplication.ui.adapter.DetailsReviewsAdapter
 import utopia.ikbal.simplemovieapplication.ui.adapter.OnMovieClickListener
 import utopia.ikbal.simplemovieapplication.ui.base.BaseActivity
 import utopia.ikbal.simplemovieapplication.ui.movie.DetailsMovieViewModel
+import utopia.ikbal.simplemovieapplication.ui.movie.RateMovieBottomSheetFragment
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
 import utopia.ikbal.simplemovieapplication.util.PaginationScrollListener
 
@@ -43,7 +44,7 @@ class MovieDetailsActivity : BaseActivity() {
             it,
             ::showLoading,
             ::hideLoading,
-            { it1 -> it1.let { it2 -> submitDetailsData(it2) } },
+            { it1 -> submitDetailsData(it1) },
             { showGenericError("Something went wrong") }
         )
     }
@@ -85,6 +86,8 @@ class MovieDetailsActivity : BaseActivity() {
         initCastRecyclerView()
         initReviewRecyclerView()
         initObserver()
+        initOnBackPressed()
+        initRating()
     }
 
     private fun showLoading() {
@@ -95,6 +98,9 @@ class MovieDetailsActivity : BaseActivity() {
 
     }
 
+    private fun initOnBackPressed() {
+        img_details_back_button.setOnClickListener{finish()}
+    }
 
     private fun initializeVideo(data1: List<VideoData>?) {
         if (data1?.isEmpty() == true) {
@@ -111,6 +117,14 @@ class MovieDetailsActivity : BaseActivity() {
             } catch (exc: ActivityNotFoundException) {
                 startActivity(webIntent)
             }
+        }
+    }
+
+    private fun initRating() {
+        val movieId = intent.getIntExtra(MOVIE_ID, -1)
+        if (movieId == -1) finish()
+        tv_rate_movie.setOnClickListener{
+            RateMovieBottomSheetFragment.show(supportFragmentManager, movieId)
         }
     }
 
@@ -156,10 +170,12 @@ class MovieDetailsActivity : BaseActivity() {
         if (movieId == -1) finish()
         requestManager = Glide.with(this)
         detailsMovieViewModel = ViewModelProvider(this).get(DetailsMovieViewModel::class.java)
-        detailsMovieViewModel.getDetails(movieId)
-        detailsMovieViewModel.getVideos(movieId)
-        detailsMovieViewModel.getCasts(movieId)
-        detailsMovieViewModel.getReviews(movieId)
+        with(detailsMovieViewModel) {
+            getDetails(movieId)
+            getVideos(movieId)
+            getCasts(movieId)
+            getReviews(movieId)
+        }
     }
 
     private fun initObserver() {

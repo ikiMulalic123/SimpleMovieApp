@@ -3,10 +3,7 @@ package utopia.ikbal.simplemovieapplication.ui.movie
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import utopia.ikbal.simplemovieapplication.data.model.CastData
-import utopia.ikbal.simplemovieapplication.data.model.DetailsData
-import utopia.ikbal.simplemovieapplication.data.model.ReviewData
-import utopia.ikbal.simplemovieapplication.data.model.VideoData
+import utopia.ikbal.simplemovieapplication.data.model.*
 import utopia.ikbal.simplemovieapplication.extensions.applySchedulers
 import utopia.ikbal.simplemovieapplication.repository.DetailsMovieRepository
 import utopia.ikbal.simplemovieapplication.ui.base.BaseViewModel
@@ -23,6 +20,7 @@ constructor(private val detailsMovieRepository: DetailsMovieRepository) : BaseVi
     private val _reviewsLiveData = MutableLiveData<NetworkResult<List<ReviewData>?>>()
     private val _videosLiveData = MutableLiveData<NetworkResult<List<VideoData>?>>()
 
+
     private var page: Int = 1
     private var totalPages: Int? = 1
 
@@ -38,15 +36,12 @@ constructor(private val detailsMovieRepository: DetailsMovieRepository) : BaseVi
         addToDisposable(detailsMovieRepository.getDetails(id)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _detailsLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                loading = false
                 _detailsLiveData.value = NetworkResult.Data(it)
             }, {
                 _detailsLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }
@@ -55,15 +50,12 @@ constructor(private val detailsMovieRepository: DetailsMovieRepository) : BaseVi
         addToDisposable(detailsMovieRepository.getCredits(id)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _castLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                loading = false
                 _castLiveData.value = NetworkResult.Data(it.cast)
             }, {
                 _detailsLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }
@@ -112,15 +104,12 @@ constructor(private val detailsMovieRepository: DetailsMovieRepository) : BaseVi
         addToDisposable(detailsMovieRepository.getVideos(id)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _videosLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                loading = false
                 _videosLiveData.value = NetworkResult.Data(it.results)
             }, {
                 _detailsLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }

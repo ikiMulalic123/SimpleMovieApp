@@ -11,19 +11,17 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import utopia.ikbal.simplemovieapplication.network.ActorApi
-import utopia.ikbal.simplemovieapplication.network.DetailsApi
-import utopia.ikbal.simplemovieapplication.network.MovieApi
-import utopia.ikbal.simplemovieapplication.network.SearchMovieApi
+import utopia.ikbal.simplemovieapplication.network.*
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
 
-    private val BASE_URL = "https://api.themoviedb.org/3/discover/"
-    private val BASE_SEARCH_URL = "https://api.themoviedb.org/3/search/"
-    private val BASE_DETAILS_MOVIE_URL = "https://api.themoviedb.org/3/"
+    private const val BASE_URL = "https://api.themoviedb.org/3/discover/"
+    private const val BASE_SEARCH_URL = "https://api.themoviedb.org/3/search/"
+    private const val BASE_DETAILS_MOVIE_URL = "https://api.themoviedb.org/3/"
+    private const val BASE_TOKEN_URL = "https://api.themoviedb.org/3/authentication/"
 
     @Singleton
     @Provides
@@ -82,5 +80,14 @@ object RetrofitModule {
             .baseUrl(BASE_DETAILS_MOVIE_URL)
             .build()
             .create(ActorApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLoginService(retrofit: Retrofit.Builder) : LoginApi {
+        return retrofit
+            .baseUrl(BASE_TOKEN_URL)
+            .build()
+            .create(LoginApi::class.java)
     }
 }

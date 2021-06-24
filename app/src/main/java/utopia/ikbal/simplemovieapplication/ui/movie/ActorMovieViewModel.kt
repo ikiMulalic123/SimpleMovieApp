@@ -32,21 +32,16 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
         _actorSeriesAsActorLiveData
     val actorImagesLiveData: LiveData<NetworkResult<List<ActorImageData>?>> = _actorImagesLiveData
 
-    var loading: Boolean = false
-
     fun getDetails(actorId: Int) {
         addToDisposable(actorMovieRepository.getActorDetails(actorId)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _actorLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                loading = false
                 _actorLiveData.value = NetworkResult.Data(it)
             }, {
                 _actorLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }
@@ -55,15 +50,12 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
         addToDisposable(actorMovieRepository.getActorMovies(actorId)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _actorMovieAsActorLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                loading = false
                 _actorMovieAsActorLiveData.value = NetworkResult.Data(it.cast)
             }, {
                 _actorMovieAsActorLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }
@@ -72,15 +64,12 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
         addToDisposable(actorMovieRepository.getActorSeries(actorId)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _actorSeriesAsActorLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                loading = false
                 _actorSeriesAsActorLiveData.value = NetworkResult.Data(it.cast)
             }, {
                 _actorSeriesAsActorLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }
@@ -89,15 +78,12 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
         addToDisposable(actorMovieRepository.getActorImages(actorId)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _actorImagesLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                loading = false
                 _actorImagesLiveData.value = NetworkResult.Data(it.profiles)
             }, {
                 _actorImagesLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }
