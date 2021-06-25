@@ -10,15 +10,15 @@ constructor(
     private val actorApi: ActorApi
 ) {
 
-    fun getActorDetails(actorId: Int): Single<ActorData> =
+    fun getActorDetails(actorId: Int) =
         actorApi.getActorDetails(actorId, TOKEN)
 
-    fun getActorMovies(actorId: Int): Single<ActorMovieCategory> =
+    fun getActorMovies(actorId: Int) =
         actorApi.getActorMovies(actorId, TOKEN)
 
-    fun getActorSeries(actorId: Int): Single<ActorSeriesData> =
+    fun getActorSeries(actorId: Int) =
         actorApi.getActorSeries(actorId, TOKEN)
 
-    fun getActorImages(actorId: Int): Single<ActorImageCategory> =
+    fun getActorImages(actorId: Int) =
         actorApi.getActorImages(actorId, TOKEN)
 }

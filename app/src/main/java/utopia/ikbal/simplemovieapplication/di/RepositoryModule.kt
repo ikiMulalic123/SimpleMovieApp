@@ -1,19 +1,25 @@
 package utopia.ikbal.simplemovieapplication.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import utopia.ikbal.simplemovieapplication.network.*
-import utopia.ikbal.simplemovieapplication.repository.ActorMovieRepository
-import utopia.ikbal.simplemovieapplication.repository.DetailsMovieRepository
-import utopia.ikbal.simplemovieapplication.repository.LoginRepository
-import utopia.ikbal.simplemovieapplication.repository.MovieRepository
+import utopia.ikbal.simplemovieapplication.repository.*
+import utopia.ikbal.simplemovieapplication.util.SharedPreferenceRepo
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferenceRepo(
+        @ApplicationContext context: Context
+    ) :SharedPreferenceRepo = SharedPreferenceRepo.create(context)
 
     @Singleton
     @Provides
@@ -40,4 +46,9 @@ object RepositoryModule {
         loginApi: LoginApi
     ) = LoginRepository(loginApi)
 
+    @Singleton
+    @Provides
+    fun provideSharedPreferenceRepository(
+        sharedPreferenceRepo: SharedPreferenceRepo
+    ) = SharedPreferenceRepository(sharedPreferenceRepo)
 }

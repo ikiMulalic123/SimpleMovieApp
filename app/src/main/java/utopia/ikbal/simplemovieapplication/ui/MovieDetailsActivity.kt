@@ -44,7 +44,7 @@ class MovieDetailsActivity : BaseActivity() {
             it,
             ::showLoading,
             ::hideLoading,
-            { it1 -> submitDetailsData(it1) },
+            { data -> submitDetailsData(data) },
             { showGenericError("Something went wrong") }
         )
     }
@@ -54,7 +54,7 @@ class MovieDetailsActivity : BaseActivity() {
             it,
             ::showLoading,
             ::hideLoading,
-            { list -> list?.let { it1 -> initializeVideo(it1) } },
+            { list -> list?.let { data -> initializeVideo(data) } },
             { showGenericError("something went wrong") }
         )
     }
@@ -64,7 +64,7 @@ class MovieDetailsActivity : BaseActivity() {
             it,
             ::showLoading,
             ::hideLoading,
-            { list -> list?.let { it1 -> adapterCast.submitList(it1) } },
+            { list -> list?.let { data -> adapterCast.submitList(data) } },
             { showGenericError("Something went wrong") }
         )
     }
@@ -74,7 +74,7 @@ class MovieDetailsActivity : BaseActivity() {
             it,
             ::showLoading,
             ::hideLoading,
-            { list -> list?.let { it1 -> adapterReview.submitList(it1) } },
+            { list -> list?.let { data -> adapterReview.submitList(data) } },
             { showGenericError("Something went wrong") }
         )
     }

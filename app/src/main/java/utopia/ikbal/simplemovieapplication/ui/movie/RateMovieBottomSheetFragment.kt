@@ -1,7 +1,5 @@
 package utopia.ikbal.simplemovieapplication.ui.movie
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,7 +13,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_rate_movie.*
 import utopia.ikbal.simplemovieapplication.R
-import utopia.ikbal.simplemovieapplication.data.Constants.Companion.MY_SHARED_PREFERENCE
 import utopia.ikbal.simplemovieapplication.data.model.RateMovieData
 import utopia.ikbal.simplemovieapplication.data.model.RateMovieResponseData
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
@@ -25,12 +22,20 @@ import utopia.ikbal.simplemovieapplication.util.NetworkResultProcessor
 class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultProcessor {
 
     private lateinit var rateMovieViewModel: RateMovieViewModel
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sessionId : String
 
     private val rateMovieObserver = Observer<NetworkResult<RateMovieResponseData>?> {
         processNetworkResult(
             it,
             data = { data -> rateMovieSuccession(data) },
+            onError = { showGenericError("Something went wrong") }
+        )
+    }
+
+    private val sharedPreferenceObserver = Observer<NetworkResult<String>?> {
+        processNetworkResult(
+            it,
+            data = { data -> initRateMovie(data) },
             onError = { showGenericError("Something went wrong") }
         )
     }
@@ -44,18 +49,11 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
-        initSharedPreference()
-        rateMovie()
         initObserver()
     }
 
     override fun showGenericError(message: String) {
         Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG).show()
-    }
-
-    private fun initSharedPreference() {
-        sharedPreferences = requireContext()
-            .getSharedPreferences(MY_SHARED_PREFERENCE, Context.MODE_PRIVATE)
     }
 
     private fun rateMovieSuccession(rateMovieResponseData: RateMovieResponseData) {
@@ -68,22 +66,31 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
         dismiss()
     }
 
-    private fun rateMovie() {
-
+    private fun initRateMovie(sessionId: String) {
+        val movieId = arguments?.getInt(MOVIE_ID)
+        btn_confirm_rating.setOnClickListener {
+            movieId?.let { movieId ->
+                rateMovieViewModel.rateMovie(
+                    movieId, sessionId, RateMovieData(rating_bar_rate_fragment.rating * 2)
+                )
+            }
+        }
     }
 
     private fun initViewModel() {
         rateMovieViewModel = ViewModelProvider(this).get(RateMovieViewModel::class.java)
+        rateMovieViewModel.getString()
     }
 
     private fun initObserver() {
         with(rateMovieViewModel) {
             rateMovieLiveData.observe(viewLifecycleOwner, rateMovieObserver)
+            sharedPreferenceStringLiveData.observe(viewLifecycleOwner, sharedPreferenceObserver)
         }
     }
 
     companion object {
-        const val MOVIE_ID = "movie_id"
+        private const val MOVIE_ID = "movie_id"
 
         private fun newInstance(movieId: Int) = RateMovieBottomSheetFragment().apply {
             arguments = Bundle().apply {

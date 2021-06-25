@@ -4,15 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import utopia.ikbal.simplemovieapplication.data.Constants.Companion.MY_SHARED_PREFERENCE
 import utopia.ikbal.simplemovieapplication.extensions.clearSharedPreferences
 import utopia.ikbal.simplemovieapplication.extensions.editSharedPreferences
 
-class SharedPreferenceRepo(context: Context) : NameRepository {
+class SharedPreferenceRepo(preferences: SharedPreferences) : NameRepository {
 
-    private val preferences: SharedPreferences =
-        context.getSharedPreferences(MY_SHARED_PREFERENCE, Context.MODE_PRIVATE)
     private val prefSubject = BehaviorSubject.createDefault(preferences)
 
     private val prefChangeListener =
@@ -20,31 +19,41 @@ class SharedPreferenceRepo(context: Context) : NameRepository {
             prefSubject.onNext(sharedPreferences)
         }
 
-    override fun saveName(name: String): Completable = prefSubject
+    override fun saveString(name: String): Completable = prefSubject
         .firstOrError()
         .editSharedPreferences {
-            putString(KEY_NAME, name)
+            putString(KEY_STRING_NAME, name)
         }
 
-    override fun name(): Observable<String> =
-        prefSubject.map { it.getString(KEY_NAME, "") }
+    override fun saveBoolean(name: Boolean): Completable =
+        prefSubject.firstOrError()
+            .editSharedPreferences {
+                putBoolean(KEY_BOOLEAN_NAME, name)
+            }
+
+    override fun getString(): Observable<String> =
+        prefSubject.map { it.getString(KEY_STRING_NAME, "")}
+
+    override fun getBoolean(): Observable<Boolean> =
+        prefSubject.map { it.getBoolean(KEY_BOOLEAN_NAME, false) }
 
     override fun clear(): Completable {
         return prefSubject.firstOrError()
             .clearSharedPreferences {
-                remove(KEY_NAME)
+                remove(KEY_STRING_NAME)
             }
     }
 
     companion object {
 
+        private const val KEY_STRING_NAME = "session_id"
+        private const val KEY_BOOLEAN_NAME = "isUserLogged"
+
         fun create(context: Context): SharedPreferenceRepo {
             val preferences =
                 context.getSharedPreferences(MY_SHARED_PREFERENCE, Context.MODE_PRIVATE)
-            return SharedPreferenceRepo(context)
+            return SharedPreferenceRepo(preferences)
         }
-
-        private const val KEY_NAME = "key_name"
     }
 
     init {

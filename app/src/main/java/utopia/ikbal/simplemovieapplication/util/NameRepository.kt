@@ -2,12 +2,17 @@ package utopia.ikbal.simplemovieapplication.util
 
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 
 interface NameRepository {
 
-    fun saveName(name: String): Completable
+    fun saveString(name: String): Completable
 
-    fun name(): Observable<String>
+    fun saveBoolean(name: Boolean): Completable
+
+    fun getString(): Observable<String>
+
+    fun getBoolean(): Observable<Boolean>
 
     fun clear(): Completable
 }
