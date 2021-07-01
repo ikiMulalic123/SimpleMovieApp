@@ -19,12 +19,13 @@ constructor(private val detailsMovieRepository: DetailsMovieRepository) : BaseVi
     private val _castLiveData = MutableLiveData<NetworkResult<List<CastData>?>>()
     private val _reviewsLiveData = MutableLiveData<NetworkResult<List<ReviewData>?>>()
     private val _videosLiveData = MutableLiveData<NetworkResult<List<VideoData>?>>()
-
+    private val _imagesLiveData = MutableLiveData<NetworkResult<List<ImageData>?>>()
 
     private var page: Int = 1
     private var totalPages: Int? = 1
 
     val videosLiveData: LiveData<NetworkResult<List<VideoData>?>> = _videosLiveData
+    val imagesLiveData: LiveData<NetworkResult<List<ImageData>?>> = _imagesLiveData
     val detailsLiveData: LiveData<NetworkResult<DetailsData>?> = _detailsLiveData
     val castLiveData: LiveData<NetworkResult<List<CastData>?>> = _castLiveData
     val reviewsLiveData: LiveData<NetworkResult<List<ReviewData>?>> = _reviewsLiveData
@@ -71,8 +72,8 @@ constructor(private val detailsMovieRepository: DetailsMovieRepository) : BaseVi
             .subscribe({
                 totalPages = it.total_pages
                 _reviewsLiveData.value = NetworkResult.Data(it.results)
-                isLastPage = (page == totalPages)
-                page++
+                isLastPage = (totalPages?.let { page <= it } == true)
+                if (isLastPage) page++
                 getReviewsAfter(id)
             }, {
                 _detailsLiveData.value = NetworkResult.Error(it)
@@ -90,8 +91,8 @@ constructor(private val detailsMovieRepository: DetailsMovieRepository) : BaseVi
             }
             .subscribe({
                 _reviewsLiveData.value = NetworkResult.Data(it.results)
-                isLastPage = (page == totalPages)
-                page++
+                isLastPage = (totalPages?.let { page < it } == true)
+                if (isLastPage) page++
                 loading = false
             }, {
                 _detailsLiveData.value = NetworkResult.Error(it)
@@ -110,6 +111,20 @@ constructor(private val detailsMovieRepository: DetailsMovieRepository) : BaseVi
                 _videosLiveData.value = NetworkResult.Data(it.results)
             }, {
                 _detailsLiveData.value = NetworkResult.Error(it)
+            })
+        )
+    }
+
+    fun getImages(id: Int) {
+        addToDisposable(detailsMovieRepository.getImages(id)
+            .applySchedulers(scheduler)
+            .doOnSubscribe {
+                _imagesLiveData.value = NetworkResult.Loading
+            }
+            .subscribe({
+                _imagesLiveData.value = NetworkResult.Data(it.posters)
+            }, {
+                _imagesLiveData.value = NetworkResult.Error(it)
             })
         )
     }

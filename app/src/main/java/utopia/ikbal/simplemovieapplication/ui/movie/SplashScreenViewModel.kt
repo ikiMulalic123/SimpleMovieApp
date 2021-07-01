@@ -44,15 +44,10 @@ constructor(private val sharedPreferenceRepository: SharedPreferenceRepository) 
     fun getBoolean() {
         addToDisposable(sharedPreferenceRepository.getBoolean()
             .applySchedulers(scheduler)
-            .doOnSubscribe{
-                Log.d("Ikbal","Boolean is in doOnSubscribe")
-            }
             .subscribe({
                 _sharedPreferenceBooleanLiveData.value = NetworkResult.Data(it)
-                Log.d("Ikbal","Boolean from VM is $it")
             }, {
                 _sharedPreferenceBooleanLiveData.value = NetworkResult.Error(it)
-                Log.d("Ikbal", "Boolean from VM is error: $it")
             }))
     }
 

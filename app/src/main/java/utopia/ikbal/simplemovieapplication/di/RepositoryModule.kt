@@ -51,4 +51,10 @@ object RepositoryModule {
     fun provideSharedPreferenceRepository(
         sharedPreferenceRepo: SharedPreferenceRepo
     ) = SharedPreferenceRepository(sharedPreferenceRepo)
+
+    @Singleton
+    @Provides
+    fun provideRatedMovieRepository (
+        ratedMovieApi: RatedMovieApi
+    ) = RatedMovieRepository(ratedMovieApi)
 }

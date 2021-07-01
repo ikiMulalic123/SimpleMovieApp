@@ -26,7 +26,8 @@
         android:alpha="0.2"
         android:background="@color/black"
         android:clickable="true"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:focusable="true">
 
         <ProgressBar
             android:id="@+id/progress_bar"

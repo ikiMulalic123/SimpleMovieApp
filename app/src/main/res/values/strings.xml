@@ -23,4 +23,9 @@
     <string name="rate_movie_rating_fragment">Rate Movie</string>
     <string name="confirm_rating">Confirm</string>
 
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="rated_movies">Rated Movies</string>
+    <string name="log_out">Log Out</string>
+
 </resources>

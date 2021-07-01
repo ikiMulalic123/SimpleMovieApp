@@ -36,7 +36,6 @@ class SearchMovieFragment : BaseFragment() {
                 showNoResultsFound(true)
             },
             onError = { showGenericError("Something is wrong") }
-            /*{ it1 -> it1.message?.let { it1 -> showGenericError(it1) } }*/
         )
     }
 

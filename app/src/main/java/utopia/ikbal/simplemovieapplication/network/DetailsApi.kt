@@ -31,7 +31,12 @@ interface DetailsApi {
         @Query(API_KEY) token: String
     ): Single<VideoList>
 
-    //provjeriti headings
+    @GET(IMAGES)
+    fun getImages(
+        @Path(MOVIE_ID) movieId: Int,
+        @Query(API_KEY) token: String
+    ): Single<ImageList>
+
     @POST(RATING)
     fun rateMovie(
         @Path(MOVIE_ID) movieId: Int,
@@ -50,6 +55,7 @@ interface DetailsApi {
         private const val CREDITS = "$DETAILS/credits"
         private const val REVIEWS = "$DETAILS/reviews"
         private const val VIDEOS = "$DETAILS/videos"
+        private const val IMAGES = "$DETAILS/images"
         private const val RATING = "$DETAILS/rating"
     }
 }

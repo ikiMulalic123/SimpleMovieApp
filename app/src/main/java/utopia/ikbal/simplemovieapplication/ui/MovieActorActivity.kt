@@ -2,21 +2,27 @@ package utopia.ikbal.simplemovieapplication.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_movie_actor.*
 import kotlinx.android.synthetic.main.toolbar_actor_activity.*
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.Constants
 import utopia.ikbal.simplemovieapplication.data.model.ActorData
-import utopia.ikbal.simplemovieapplication.data.model.ActorImageData
 import utopia.ikbal.simplemovieapplication.data.model.ActorMovieAsActorData
 import utopia.ikbal.simplemovieapplication.data.model.ActorSeriesCastData
+import utopia.ikbal.simplemovieapplication.data.model.ImageData
 import utopia.ikbal.simplemovieapplication.extensions.load
+import utopia.ikbal.simplemovieapplication.extensions.loadImageWithPlaceholder
 import utopia.ikbal.simplemovieapplication.ui.adapter.ActorMovieAdapter
 import utopia.ikbal.simplemovieapplication.ui.adapter.ActorSeriesAdapter
 import utopia.ikbal.simplemovieapplication.ui.adapter.OnMovieClickListener
@@ -24,6 +30,7 @@ import utopia.ikbal.simplemovieapplication.ui.base.BaseActivity
 import utopia.ikbal.simplemovieapplication.ui.movie.ActorMovieViewModel
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
 import java.util.*
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MovieActorActivity : BaseActivity() {
@@ -48,7 +55,7 @@ class MovieActorActivity : BaseActivity() {
             it,
             ::showLoading,
             ::hideLoading,
-            { list -> list?.let { it1 -> actorMovieAdapter.submitList(it1) } } ,
+            { list -> list?.let { it1 -> actorMovieAdapter.submitList(it1) } },
             { showGenericError("Something went wrong") }
         )
     }
@@ -63,7 +70,7 @@ class MovieActorActivity : BaseActivity() {
         )
     }
 
-    private val imageObserver = Observer<NetworkResult<List<ActorImageData>?>> {
+    private val imageObserver = Observer<NetworkResult<List<ImageData>?>> {
         processNetworkResult(
             it,
             ::showLoading,
@@ -92,7 +99,7 @@ class MovieActorActivity : BaseActivity() {
     }
 
     private fun initOnBackPressed() {
-        img_actor_back_button.setOnClickListener{finish()}
+        img_actor_back_button.setOnClickListener { finish() }
     }
 
     private fun submitDetails(data: ActorData) {
@@ -102,8 +109,19 @@ class MovieActorActivity : BaseActivity() {
         tv_actor_info.text = data.biography
     }
 
-    private fun initImages (data: List<ActorImageData>){
-        if(data.isNotEmpty()) img_cast_poster.load(Constants.BASE_IMAGE_URL + data[data.size - 1].file_path, requestManager)
+    private fun initImages(data: List<ImageData>?) {
+        val imageData = data?.get(0)
+        val height = Resources.getSystem().displayMetrics.heightPixels
+        val width = Resources.getSystem().displayMetrics.widthPixels
+        val ratio = width / height.toFloat()
+        val newHeight = (ratio * (imageData?.height ?: 1)).roundToInt()
+        img_placeholder_actor.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, newHeight)
+        (img_placeholder_actor.layoutParams as ConstraintLayout.LayoutParams).topToBottom =
+            R.id.toolbar_actor_movie
+        img_cast_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData?.file_path,
+            requestManager)
+        /*if (data.isNotEmpty()) img_cast_poster.loadImageWithPlaceholder(Constants.BASE_IMAGE_URL + data[data.size - 1].file_path,
+            requestManager)*/
     }
 
     private fun initSeriesRecyclerView() {

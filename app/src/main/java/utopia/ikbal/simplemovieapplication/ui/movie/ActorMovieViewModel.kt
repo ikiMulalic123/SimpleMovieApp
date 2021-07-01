@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import utopia.ikbal.simplemovieapplication.data.model.ActorData
-import utopia.ikbal.simplemovieapplication.data.model.ActorImageData
 import utopia.ikbal.simplemovieapplication.data.model.ActorMovieAsActorData
 import utopia.ikbal.simplemovieapplication.data.model.ActorSeriesCastData
+import utopia.ikbal.simplemovieapplication.data.model.ImageData
 import utopia.ikbal.simplemovieapplication.extensions.applySchedulers
 import utopia.ikbal.simplemovieapplication.repository.ActorMovieRepository
 import utopia.ikbal.simplemovieapplication.ui.base.BaseViewModel
@@ -23,14 +23,14 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
         MutableLiveData<NetworkResult<List<ActorMovieAsActorData>?>>()
     private val _actorSeriesAsActorLiveData =
         MutableLiveData<NetworkResult<List<ActorSeriesCastData>?>>()
-    private val _actorImagesLiveData = MutableLiveData<NetworkResult<List<ActorImageData>?>>()
+    private val _actorImagesLiveData = MutableLiveData<NetworkResult<List<ImageData>?>>()
 
     val actorLiveData: LiveData<NetworkResult<ActorData>?> = _actorLiveData
     val actorMovieAsActorLiveData: LiveData<NetworkResult<List<ActorMovieAsActorData>?>> =
         _actorMovieAsActorLiveData
     val actorSeriesAsActorLiveData: LiveData<NetworkResult<List<ActorSeriesCastData>?>> =
         _actorSeriesAsActorLiveData
-    val actorImagesLiveData: LiveData<NetworkResult<List<ActorImageData>?>> = _actorImagesLiveData
+    val actorImagesLiveData: LiveData<NetworkResult<List<ImageData>?>> = _actorImagesLiveData
 
     fun getDetails(actorId: Int) {
         addToDisposable(actorMovieRepository.getActorDetails(actorId)

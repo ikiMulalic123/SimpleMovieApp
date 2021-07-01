@@ -3,9 +3,12 @@ package utopia.ikbal.simplemovieapplication.ui
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +23,7 @@ import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.Constants
 import utopia.ikbal.simplemovieapplication.data.Constants.Companion.BASE_YOUTUBE_URL
 import utopia.ikbal.simplemovieapplication.data.model.*
-import utopia.ikbal.simplemovieapplication.extensions.load
+import utopia.ikbal.simplemovieapplication.extensions.loadImageWithPlaceholder
 import utopia.ikbal.simplemovieapplication.extensions.visible
 import utopia.ikbal.simplemovieapplication.ui.adapter.DetailsCastAdapter
 import utopia.ikbal.simplemovieapplication.ui.adapter.DetailsReviewsAdapter
@@ -30,6 +33,7 @@ import utopia.ikbal.simplemovieapplication.ui.movie.DetailsMovieViewModel
 import utopia.ikbal.simplemovieapplication.ui.movie.RateMovieBottomSheetFragment
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
 import utopia.ikbal.simplemovieapplication.util.PaginationScrollListener
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MovieDetailsActivity : BaseActivity() {
@@ -56,6 +60,14 @@ class MovieDetailsActivity : BaseActivity() {
             ::hideLoading,
             { list -> list?.let { data -> initializeVideo(data) } },
             { showGenericError("something went wrong") }
+        )
+    }
+
+    private val imagesObserver = Observer<NetworkResult<List<ImageData>?>> {
+        processNetworkResult(
+            it,
+            data = { list -> initImage(list) },
+            onError = { showGenericError("Something went wrong") }
         )
     }
 
@@ -99,15 +111,27 @@ class MovieDetailsActivity : BaseActivity() {
     }
 
     private fun initOnBackPressed() {
-        img_details_back_button.setOnClickListener{finish()}
+        img_details_back_button.setOnClickListener { finish() }
+    }
+
+    private fun initImage(data: List<ImageData>?) {
+        val imageData = data?.get(0)
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val height = Resources.getSystem().displayMetrics.heightPixels
+        val width = Resources.getSystem().displayMetrics.widthPixels
+        val ratio = width / height.toFloat()
+        val newHeight = (ratio * (imageData?.height ?: 1)).roundToInt()
+        img_placeholder.layoutParams = ConstraintLayout.LayoutParams(MATCH_PARENT, newHeight)
+        (img_placeholder.layoutParams as ConstraintLayout.LayoutParams).topToBottom =
+            R.id.toolbar_details_movie
+        img_details_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData?.file_path,
+            requestManager)
     }
 
     private fun initializeVideo(data1: List<VideoData>?) {
-        if (data1?.isEmpty() == true) {
-            return
-        } else {
-            ll_img_play.visible()
-        }
+        if (data1?.isEmpty() == true) return
+        else ll_img_play.visible()
         val ytIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + data1?.get(0)?.key))
         val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_URL + data1?.get(0)?.key))
 
@@ -123,14 +147,12 @@ class MovieDetailsActivity : BaseActivity() {
     private fun initRating() {
         val movieId = intent.getIntExtra(MOVIE_ID, -1)
         if (movieId == -1) finish()
-        tv_rate_movie.setOnClickListener{
+        tv_rate_movie.setOnClickListener {
             RateMovieBottomSheetFragment.show(supportFragmentManager, movieId)
         }
     }
 
     private fun submitDetailsData(detailsData: DetailsData) {
-        img_details_poster.load(Constants.BASE_IMAGE_URL + detailsData.backdrop_path,
-            requestManager)
         tv_details_title.text = detailsData.original_title
         rating_bar_details.rating = detailsData.vote_average / 2
         tv_rating_details.text = (detailsData.vote_average / 2).toString()
@@ -173,6 +195,7 @@ class MovieDetailsActivity : BaseActivity() {
         with(detailsMovieViewModel) {
             getDetails(movieId)
             getVideos(movieId)
+            getImages(movieId)
             getCasts(movieId)
             getReviews(movieId)
         }
@@ -182,6 +205,7 @@ class MovieDetailsActivity : BaseActivity() {
         with(detailsMovieViewModel) {
             detailsLiveData.observe(this@MovieDetailsActivity, detailsObserver)
             videosLiveData.observe(this@MovieDetailsActivity, videosObserver)
+            imagesLiveData.observe(this@MovieDetailsActivity, imagesObserver)
             castLiveData.observe(this@MovieDetailsActivity, castsObserver)
             reviewsLiveData.observe(this@MovieDetailsActivity, reviewsObserver)
         }

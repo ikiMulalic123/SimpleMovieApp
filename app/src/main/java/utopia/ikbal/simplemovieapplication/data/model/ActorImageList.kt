@@ -2,9 +2,9 @@ package utopia.ikbal.simplemovieapplication.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class ActorImageCategory(
+data class ActorImageList(
     @SerializedName("id")
-    val id: Float?,
+    val id: Int?,
     @SerializedName("profiles")
-    val profiles: List<ActorImageData>?
+    val profiles : List<ImageData>?
 )

@@ -4,10 +4,7 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import utopia.ikbal.simplemovieapplication.data.model.ActorData
-import utopia.ikbal.simplemovieapplication.data.model.ActorImageCategory
-import utopia.ikbal.simplemovieapplication.data.model.ActorMovieCategory
-import utopia.ikbal.simplemovieapplication.data.model.ActorSeriesData
+import utopia.ikbal.simplemovieapplication.data.model.*
 
 interface ActorApi {
 
@@ -33,7 +30,7 @@ interface ActorApi {
     fun getActorImages(
         @Path(PERSON_ID) personId: Int,
         @Query(API_KEY) token: String
-    ):Single<ActorImageCategory>
+    ):Single<ActorImageList>
 
     companion object {
         private const val API_KEY = "api_key"

@@ -1,7 +1,6 @@
 package utopia.ikbal.simplemovieapplication.ui.movie
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ import utopia.ikbal.simplemovieapplication.util.NetworkResultProcessor
 class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultProcessor {
 
     private lateinit var rateMovieViewModel: RateMovieViewModel
-    private lateinit var sessionId : String
 
     private val rateMovieObserver = Observer<NetworkResult<RateMovieResponseData>?> {
         processNetworkResult(
@@ -57,7 +55,7 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
     }
 
     private fun rateMovieSuccession(rateMovieResponseData: RateMovieResponseData) {
-        if (rateMovieResponseData.status_code == 1) {
+        if (rateMovieResponseData.status_code == 1 || rateMovieResponseData.status_code == 12) {
             Toast.makeText(requireContext(), "You successfully rated movie", Toast.LENGTH_SHORT)
                 .show()
         } else {

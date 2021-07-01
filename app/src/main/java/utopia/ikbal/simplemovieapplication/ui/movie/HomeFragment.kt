@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -18,6 +19,8 @@ import utopia.ikbal.simplemovieapplication.ui.base.BaseFragment
 @AndroidEntryPoint
 class HomeFragment : BaseFragment(), View.OnClickListener {
 
+    private lateinit var drawerToggle: ActionBarDrawerToggle
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,6 +33,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
         initViewPager()
         initTabLayout()
         initClickListener()
+        initDrawer()
     }
 
     override fun onDestroyView() {
@@ -39,25 +43,34 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.img_nav_menu -> Toast.makeText(requireContext(),
+            /*R.id.img_nav_menu -> Toast.makeText(requireContext(),
                 getString(R.string.navigation_clicked),
-                Toast.LENGTH_SHORT).show()
+                Toast.LENGTH_SHORT).show()*/
             R.id.img_search -> this.navigateTo(R.id.action_homeFragment_to_searchMovieFragment)
             R.id.img_three_dots -> Toast.makeText(requireContext(),
                 getString(R.string.three_dots_clicked),
                 Toast.LENGTH_SHORT).show()
+            R.id.tv_navigation_rated -> this.navigateTo(R.id.action_homeFragment_to_ratedMoviesFragment)
+            R.id.tv_navigation_logout -> this.navigateTo(R.id.action_homeFragment_to_loginActivity)
         }
     }
 
     private fun clearInstances() {
+/*
         img_nav_menu.setOnClickListener(null)
+*/
+        tv_navigation_rated.setOnClickListener(null)
+        tv_navigation_logout.setOnClickListener(null)
         img_search.setOnClickListener(null)
         img_three_dots.setOnClickListener(null)
         view_pager.adapter = null
     }
 
     private fun initClickListener() {
+/*
         img_nav_menu.setOnClickListener(this)
+*/      tv_navigation_logout.setOnClickListener(this)
+        tv_navigation_rated.setOnClickListener(this)
         img_search.setOnClickListener(this)
         img_three_dots.setOnClickListener(this)
     }
@@ -69,6 +82,20 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun initViewPager() {
-        view_pager.adapter =  MovieFragmentAdapter(childFragmentManager, lifecycle)
+        view_pager.adapter = MovieFragmentAdapter(childFragmentManager, lifecycle)
     }
+
+    private fun initDrawer() {
+        drawerToggle = setUpDrawerToggle()
+        drawerToggle.isDrawerIndicatorEnabled = true
+        drawerToggle.syncState()
+        drawer_layout.addDrawerListener(drawerToggle)
+    }
+
+    private fun setUpDrawerToggle(): ActionBarDrawerToggle =
+        ActionBarDrawerToggle(requireActivity(),
+            drawer_layout,
+            toolbar_movie,
+            R.string.drawer_open,
+            R.string.drawer_close)
 }

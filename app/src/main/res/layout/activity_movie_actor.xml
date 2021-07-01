@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_view_actor"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,12 +26,22 @@
         </Toolbar>
 
         <ImageView
-            android:id="@+id/img_cast_poster"
+            android:id="@+id/img_placeholder_actor"
             android:layout_width="match_parent"
-            android:layout_height="315dp"
-            android:scaleType="centerCrop"
+            android:layout_height="0dp"
             android:background="@color/glide_place_holder"
             app:layout_constraintTop_toBottomOf="@id/toolbar_actor_movie" />
+
+        <ImageView
+            android:id="@+id/img_cast_poster"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:elevation="1dp"
+            android:visibility="gone"
+            android:scaleType="centerCrop"
+            android:background="@color/glide_place_holder"
+            app:layout_constraintTop_toTopOf="@id/img_placeholder_actor"
+            app:layout_constraintBottom_toBottomOf="@id/img_placeholder_actor"/>
 
         <ImageView
             android:id="@+id/img_actor"

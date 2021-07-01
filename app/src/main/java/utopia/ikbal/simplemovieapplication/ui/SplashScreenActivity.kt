@@ -49,7 +49,11 @@ class SplashScreenActivity : BaseActivity() {
     private fun checkIfUserIsLogged(isUserLogged: Boolean) {
         if (!isUserLogged) {
             Log.d("Ikbal", isUserLogged.toString())
+            finish()
             LoginActivity.launch(this)
-        } else HomeActivity.launch(this)
+        } else {
+            finish()
+            HomeActivity.launch(this)
+        }
     }
 }

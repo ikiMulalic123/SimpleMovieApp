@@ -90,4 +90,13 @@ object RetrofitModule {
             .build()
             .create(LoginApi::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun provideRatedMovieService(retrofit: Retrofit.Builder): RatedMovieApi {
+        return retrofit
+            .baseUrl(BASE_DETAILS_MOVIE_URL)
+            .build()
+            .create(RatedMovieApi::class.java)
+    }
 }

@@ -18,4 +18,6 @@ abstract class BaseViewModel(protected val scheduler: Scheduler = Schedulers.io(
     }
     private fun dispose() =
         if (!compositeDisposable.isDisposed) compositeDisposable.dispose() else Unit
+
+
 }
