@@ -1,7 +1,6 @@
 package utopia.ikbal.simplemovieapplication.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,13 +14,13 @@ class SplashScreenActivity : BaseActivity() {
 
     private lateinit var splashScreenViewModel: SplashScreenViewModel
 
-    private val sharedPreferenceObserver = Observer<NetworkResult<Boolean>?>() {
+    private val sharedPreferenceObserver = Observer<NetworkResult<Boolean>>() {
         processNetworkResult(
             it,
             data = { data ->
                 checkIfUserIsLogged(data)
             },
-            onError = { showGenericError("Something is wrong") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -35,7 +34,7 @@ class SplashScreenActivity : BaseActivity() {
     private fun initViewModel() {
         splashScreenViewModel = ViewModelProvider(this).get(SplashScreenViewModel::class.java)
         with(splashScreenViewModel) {
-            getBoolean()
+            getBooleanFromSharedPreference()
         }
     }
 
@@ -48,7 +47,6 @@ class SplashScreenActivity : BaseActivity() {
 
     private fun checkIfUserIsLogged(isUserLogged: Boolean) {
         if (!isUserLogged) {
-            Log.d("Ikbal", isUserLogged.toString())
             finish()
             LoginActivity.launch(this)
         } else {

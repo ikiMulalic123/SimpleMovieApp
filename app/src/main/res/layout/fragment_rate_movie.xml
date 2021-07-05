@@ -9,7 +9,7 @@
 tools:context=".ui.movie.RateMovieBottomSheetFragment">
 
     <TextView
-        android:id="@+id/tv_rate_movie_rating_fragment"
+        android:id="@+id/tv_rate_movie_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,12 +19,12 @@ tools:context=".ui.movie.RateMovieBottomSheetFragment">
         android:textSize="14sp"/>
 
     <RatingBar
-        android:id="@+id/rating_bar_rate_fragment"
+        android:id="@+id/rating_bar_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_rate_movie_rating_fragment"
+        app:layout_constraintTop_toBottomOf="@id/tv_rate_movie_title"
         android:numStars="5"
         android:backgroundTint="@color/rating_start_background"
         android:progressTint="@color/rating_star_red"/>
@@ -36,6 +36,6 @@ tools:context=".ui.movie.RateMovieBottomSheetFragment">
         android:text="@string/confirm_rating"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rating_bar_rate_fragment"/>
+        app:layout_constraintTop_toBottomOf="@id/rating_bar_fragment"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,18 +1,34 @@
 package utopia.ikbal.simplemovieapplication.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class MovieData (
+    @SerializedName("adult")
     var adult : Boolean,
-    var backdrop_path: String? = null,
-    var genre_ids : List<Int>,
+    @SerializedName("backdrop_path")
+    var backdropPath: String? = null,
+    @SerializedName("genre_ids")
+    var genreIds : List<Int>,
+    @SerializedName("id")
     var id : Int,
-    var original_language: String? = null,
-    var original_title: String? = null,
+    @SerializedName("original_language")
+    var originalLanguage: String? = null,
+    @SerializedName("original_title")
+    var originalTitle: String? = null,
+    @SerializedName("overview")
     var overview: String? = null,
+    @SerializedName("popularity")
     var popularity : Float,
-    var poster_path: String? = null,
-    var release_date: String? = null,
+    @SerializedName("poster_path")
+    var posterPath: String? = null,
+    @SerializedName("release_date")
+    var releaseDate: String? = null,
+    @SerializedName("title")
     var title: String? = null,
+    @SerializedName("video")
     var video : Boolean,
-    var vote_average : Float,
-    var vote_count : Int
+    @SerializedName("vote_average")
+    var voteAverage : Float,
+    @SerializedName("vote_count")
+    var voteCount : Int
 )

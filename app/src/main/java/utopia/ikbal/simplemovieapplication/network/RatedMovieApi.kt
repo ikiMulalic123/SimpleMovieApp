@@ -9,14 +9,12 @@ interface RatedMovieApi {
 
     @GET(RATED)
     fun getRatedMovies(
-        @Query(API_KEY) token: String,
         @Query(SESSION_ID) sessionId: String,
         @Query(PAGE) page: Int
     ): Single<RatedMovieList>
 
     companion object {
         private const val PAGE = "page"
-        private const val API_KEY = "api_key"
         private const val SESSION_ID = "session_id"
         private const val ACCOUNT = "account/"
         private const val ACCOUNT_ID = "account_id"

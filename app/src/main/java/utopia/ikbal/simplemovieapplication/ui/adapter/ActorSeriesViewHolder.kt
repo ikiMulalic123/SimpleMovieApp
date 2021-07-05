@@ -4,12 +4,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.Constants
 import utopia.ikbal.simplemovieapplication.data.model.ActorSeriesCastData
+import utopia.ikbal.simplemovieapplication.extensions.checkIfIsNull
 import utopia.ikbal.simplemovieapplication.extensions.inflate
 import utopia.ikbal.simplemovieapplication.extensions.load
 
@@ -23,15 +23,13 @@ class ActorSeriesViewHolder(@LayoutRes layout: Int, parent: ViewGroup) :
 
     fun bind(actorSeriesCastData: ActorSeriesCastData) {
         itemView.setOnClickListener {
-            actorSeriesCastData.id?.let { it1 -> castClickListener?.onMovieClick(it1) }
+            actorSeriesCastData.id?.let { castClickListener?.onMovieClick(it) }
         }
-        seriesName.text = actorSeriesCastData.original_name
-        image.load(Constants.BASE_IMAGE_URL + actorSeriesCastData.poster_path, requestManager)
+        seriesName.text = actorSeriesCastData.originalName
+        image.load(Constants.BASE_IMAGE_URL + actorSeriesCastData.posterPath, requestManager)
     }
 
     fun recycleView() {
-        if (itemView.context != null && itemView.context is AppCompatActivity && !(itemView.context as AppCompatActivity).isDestroyed) {
-            requestManager?.clear(image)
-        }
+        if (itemView.context.checkIfIsNull()) requestManager?.clear(image)
     }
 }

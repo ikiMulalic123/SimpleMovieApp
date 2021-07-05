@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import utopia.ikbal.simplemovieapplication.R
-import utopia.ikbal.simplemovieapplication.data.model.ActorMovieAsActorData
+import utopia.ikbal.simplemovieapplication.data.model.ActorMovieData
 
 class ActorMovieAdapter(private val context: Context) :
     RecyclerView.Adapter<ActorMovieViewHolder>() {
 
     private val requestManager = Glide.with(context)
-    private val moviesList = mutableListOf<ActorMovieAsActorData>()
+    private val moviesList = mutableListOf<ActorMovieData>()
 
     var movieClickListener: OnMovieClickListener? = null
 
@@ -33,12 +33,12 @@ class ActorMovieAdapter(private val context: Context) :
         holder.recycleView()
     }
 
-    fun submitList(movies: List<ActorMovieAsActorData>) {
-        moviesList.addAll(movies)
+    fun submitList(movieMovies: List<ActorMovieData>) {
+        moviesList.addAll(movieMovies)
         notifyDataSetChanged()
     }
     
-    private fun getItem(position: Int): ActorMovieAsActorData? {
+    private fun getItem(position: Int): ActorMovieData? {
         return if (position < moviesList.size) moviesList[position]
         else null
     }

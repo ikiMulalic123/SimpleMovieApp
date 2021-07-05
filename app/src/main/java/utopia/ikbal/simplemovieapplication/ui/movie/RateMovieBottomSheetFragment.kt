@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,17 +15,18 @@ import utopia.ikbal.simplemovieapplication.data.model.RateMovieData
 import utopia.ikbal.simplemovieapplication.data.model.RateMovieResponseData
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
 import utopia.ikbal.simplemovieapplication.util.NetworkResultProcessor
+import utopia.ikbal.simplemovieapplication.util.ToastUtil
 
 @AndroidEntryPoint
 class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultProcessor {
 
     private lateinit var rateMovieViewModel: RateMovieViewModel
 
-    private val rateMovieObserver = Observer<NetworkResult<RateMovieResponseData>?> {
+    private val rateMovieObserver = Observer<NetworkResult<RateMovieResponseData>> {
         processNetworkResult(
             it,
             data = { data -> rateMovieSuccession(data) },
-            onError = { showGenericError("Something went wrong") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -34,7 +34,7 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
         processNetworkResult(
             it,
             data = { data -> initRateMovie(data) },
-            onError = { showGenericError("Something went wrong") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -51,16 +51,15 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
     }
 
     override fun showGenericError(message: String) {
-        Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG).show()
+        ToastUtil.showLongToast(requireContext(), message)
     }
 
     private fun rateMovieSuccession(rateMovieResponseData: RateMovieResponseData) {
-        if (rateMovieResponseData.status_code == 1 || rateMovieResponseData.status_code == 12) {
-            Toast.makeText(requireContext(), "You successfully rated movie", Toast.LENGTH_SHORT)
-                .show()
-        } else {
-            Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
-        }
+        if (rateMovieResponseData.status_code == SUCCESS ||
+            rateMovieResponseData.status_code == SUCCESSFULLY_UPDATED) {
+            ToastUtil.showShortToast(requireContext(), getString(R.string.movie_rated_successful))
+            } else
+            ToastUtil.showShortToast(requireContext(), getString(R.string.movie_rated_failed))
         dismiss()
     }
 
@@ -69,7 +68,7 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
         btn_confirm_rating.setOnClickListener {
             movieId?.let { movieId ->
                 rateMovieViewModel.rateMovie(
-                    movieId, sessionId, RateMovieData(rating_bar_rate_fragment.rating * 2)
+                    movieId, sessionId, RateMovieData(rating_bar_fragment.rating * 2)
                 )
             }
         }
@@ -77,7 +76,7 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
 
     private fun initViewModel() {
         rateMovieViewModel = ViewModelProvider(this).get(RateMovieViewModel::class.java)
-        rateMovieViewModel.getString()
+        rateMovieViewModel.getStringFromSharedPreference()
     }
 
     private fun initObserver() {
@@ -89,6 +88,8 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
 
     companion object {
         private const val MOVIE_ID = "movie_id"
+        private const val SUCCESS = 1
+        private const val SUCCESSFULLY_UPDATED = 12
 
         private fun newInstance(movieId: Int) = RateMovieBottomSheetFragment().apply {
             arguments = Bundle().apply {

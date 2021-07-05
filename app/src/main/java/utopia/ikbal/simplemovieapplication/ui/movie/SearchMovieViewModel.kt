@@ -15,8 +15,8 @@ class SearchMovieViewModel
 @Inject
 constructor(private val movieRepository: MovieRepository) : BaseViewModel() {
 
-    private val _movieListLiveData = MutableLiveData<NetworkResult<List<MovieData>?>>()
-    val movieListLiveData: LiveData<NetworkResult<List<MovieData>?>> = _movieListLiveData
+    private val _movieListLiveData = MutableLiveData<NetworkResult<List<MovieData>>>()
+    val movieListLiveData: LiveData<NetworkResult<List<MovieData>>> = _movieListLiveData
     var loading: Boolean = false
     var page: Int = 1
     var totalPages: Int? = 1

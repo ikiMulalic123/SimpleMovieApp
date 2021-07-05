@@ -7,7 +7,6 @@ import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
@@ -41,7 +40,7 @@ class MovieDetailsActivity : BaseActivity() {
 
     private var movieId: Int = 0
     private lateinit var detailsMovieViewModel: DetailsMovieViewModel
-    private lateinit var requestManager: RequestManager
+    private val requestManager: RequestManager by lazy { Glide.with(this) }
     private lateinit var adapterCast: DetailsCastAdapter
     private lateinit var adapterReview: DetailsReviewsAdapter
 
@@ -49,7 +48,7 @@ class MovieDetailsActivity : BaseActivity() {
         processNetworkResult(
             it,
             data = { data -> submitDetailsData(data) },
-            onError = { showGenericError("Something went wrong") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -57,7 +56,7 @@ class MovieDetailsActivity : BaseActivity() {
         processNetworkResult(
             it,
             data = { list -> list?.let { data -> initializeVideo(data) } },
-            onError = { showGenericError("something went wrong") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -65,7 +64,7 @@ class MovieDetailsActivity : BaseActivity() {
         processNetworkResult(
             it,
             data = { list -> initImage(list) },
-            onError = { showGenericError("Something went wrong") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -73,7 +72,7 @@ class MovieDetailsActivity : BaseActivity() {
         processNetworkResult(
             it,
             data = { list -> list?.let { data -> adapterCast.submitList(data) } },
-            onError = { showGenericError("Something went wrong") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -81,7 +80,7 @@ class MovieDetailsActivity : BaseActivity() {
         processNetworkResult(
             it,
             data = { list -> list?.let { data -> adapterReview.submitList(data) } },
-            onError = { showGenericError("Something went wrong") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -99,15 +98,14 @@ class MovieDetailsActivity : BaseActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        movieId = intent.getIntExtra(MOVIE_ID, -1)
-        initViewModel()
+        movieId = intent.getIntExtra(MOVIE_ID, INVALID_ID)
         if (movieId == -1) finish()
+        initViewModel()
     }
 
     private fun initMovieId() {
-        movieId = intent.getIntExtra(MOVIE_ID, -1)
+        movieId = intent.getIntExtra(MOVIE_ID, INVALID_ID)
         if (movieId == -1) finish()
-        requestManager = Glide.with(this)
         detailsMovieViewModel = ViewModelProvider(this).get(DetailsMovieViewModel::class.java)
     }
 
@@ -126,15 +124,15 @@ class MovieDetailsActivity : BaseActivity() {
         img_placeholder.layoutParams = ConstraintLayout.LayoutParams(MATCH_PARENT, newHeight)
         (img_placeholder.layoutParams as ConstraintLayout.LayoutParams).topToBottom =
             R.id.toolbar_details_movie
-        img_details_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData?.file_path,
+        img_details_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData?.filePath,
             requestManager)
     }
 
-    private fun initializeVideo(data1: List<VideoData>?) {
-        if (data1?.isEmpty() == true) return
-        else ll_img_play.visible()
-        val ytIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + data1?.get(0)?.key))
-        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_URL + data1?.get(0)?.key))
+    private fun initializeVideo(data: List<VideoData>?) {
+        if (data?.isEmpty() == true) return
+        else linear_layout_img_play.visible()
+        val ytIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_url) + data?.get(0)?.key))
+        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_URL + data?.get(0)?.key))
 
         btn_details_play.setOnClickListener {
             try {
@@ -206,6 +204,7 @@ class MovieDetailsActivity : BaseActivity() {
 
     companion object {
         const val MOVIE_ID = "movie_id"
+        private const val INVALID_ID = -1
 
         private fun createLaunchIntent(context: Context, movieId: Int) =
             Intent(context, MovieDetailsActivity::class.java).apply {

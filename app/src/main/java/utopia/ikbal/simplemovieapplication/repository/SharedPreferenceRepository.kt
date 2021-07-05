@@ -7,13 +7,16 @@ constructor(
     private val sharedPreferenceRepo: SharedPreferenceRepo
 ) {
 
-    fun saveString(name : String) = sharedPreferenceRepo.saveString(name)
+    fun saveStringToSharedPreference(name: String) =
+        sharedPreferenceRepo.saveStringToSharedPreference(name)
 
-    fun saveBoolean(name : Boolean) = sharedPreferenceRepo.saveBoolean(name)
+    fun saveBooleanToSharedPreference(name: Boolean) =
+        sharedPreferenceRepo.saveBooleanToSharedPreference(name)
 
-    fun getString ()  = sharedPreferenceRepo.getString()
+    fun getStringFromSharedPreference() =
+        sharedPreferenceRepo.getStringFromSharedPreference()
 
-    fun getBoolean() = sharedPreferenceRepo.getBoolean()
+    fun getBooleanFromSharedPreference() = sharedPreferenceRepo.getBooleanFromSharedPreference()
 
-    fun clear() = sharedPreferenceRepo.clear()
+    fun clearFromSharedPreference() = sharedPreferenceRepo.clearFromSharedPreference()
 }

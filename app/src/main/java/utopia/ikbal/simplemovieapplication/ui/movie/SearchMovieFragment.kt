@@ -26,7 +26,7 @@ class SearchMovieFragment : BaseFragment() {
     private lateinit var searchMovieViewModel: SearchMovieViewModel
     private lateinit var adapter: MovieAdapter
 
-    private val filteredMovieListObserver = Observer<NetworkResult<List<MovieData>?>> { it ->
+    private val filteredMovieListObserver = Observer<NetworkResult<List<MovieData>>> { it ->
         processNetworkResult(
             it,
             ::showLoading,
@@ -35,7 +35,7 @@ class SearchMovieFragment : BaseFragment() {
             noData = {
                 showNoResultsFound(true)
             },
-            onError = { showGenericError("Something is wrong") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -81,11 +81,11 @@ class SearchMovieFragment : BaseFragment() {
         if (issue) {
             text_view_no_results_found.text = getString(R.string.no_results_for_such_criteria)
         }
-        no_results_linear_layout.visible()
+        text_view_no_results_found.visible()
     }
 
     private fun hideNoResultsFound() {
-        no_results_linear_layout.gone()
+        text_view_no_results_found.gone()
     }
 
     private fun onBackPressed() {

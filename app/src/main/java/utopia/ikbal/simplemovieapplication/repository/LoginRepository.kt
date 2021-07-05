@@ -1,20 +1,17 @@
 package utopia.ikbal.simplemovieapplication.repository
 
-import utopia.ikbal.simplemovieapplication.data.Constants.Companion.TOKEN
-import utopia.ikbal.simplemovieapplication.data.model.CreateSessionData
 import utopia.ikbal.simplemovieapplication.data.model.LoginData
 import utopia.ikbal.simplemovieapplication.data.model.TokenStringData
 import utopia.ikbal.simplemovieapplication.network.LoginApi
-import utopia.ikbal.simplemovieapplication.util.SharedPreferenceRepo
 
 class LoginRepository
 constructor(
-    private val loginApi: LoginApi,
+    private val loginApi: LoginApi
 ) {
 
-    fun getToken() = loginApi.getToken(TOKEN)
+    fun getToken() = loginApi.getToken()
 
-    fun createSession(body: TokenStringData) = loginApi.createSession(TOKEN, body)
+    fun createSession(body: TokenStringData) = loginApi.createSession(body)
 
-    fun validateTokenLogin(body: LoginData) = loginApi.validateTokenLogin(TOKEN, body)
+    fun validateTokenLogin(body: LoginData) = loginApi.validateTokenLogin(body)
 }

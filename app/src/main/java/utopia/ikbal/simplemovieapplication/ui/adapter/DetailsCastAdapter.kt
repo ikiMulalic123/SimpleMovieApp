@@ -4,13 +4,14 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.model.CastData
 
 class DetailsCastAdapter(private val context: Context) :
     RecyclerView.Adapter<DetailsCastViewHolder>() {
 
-    private val requestManager = Glide.with(context)
+    private val requestManager: RequestManager by lazy { Glide.with(context) }
     private val castList = mutableListOf<CastData>()
 
     var castClickListener: OnMovieClickListener? = null

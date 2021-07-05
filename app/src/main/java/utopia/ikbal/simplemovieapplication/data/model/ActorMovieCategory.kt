@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class ActorMovieCategory(
     @SerializedName("cast")
-    val cast:List<ActorMovieAsActorData>?,
+    val cast:List<ActorMovieData>?,
     @SerializedName("crew")
-    val crew:List<ActorMovieAsProducerData>?,
+    val crew:List<ActorProducerData>?,
     @SerializedName("id")
     val id: Int
 )

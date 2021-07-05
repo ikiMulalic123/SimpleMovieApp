@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_rated_movies.*
-import kotlinx.android.synthetic.main.fragment_search_movie.*
 import kotlinx.android.synthetic.main.toolbar_details_activity.*
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.model.RatedMovieData
@@ -32,14 +31,6 @@ class RatedMoviesFragment : BaseFragment() {
             { showGenericError("Something went wrong") }
         )
     }
-
-    /* private val sharedPreferenceObserver = Observer<NetworkResult<String>?> {
-         processNetworkResult(
-             it,
-             data = { data -> initSessionId(data) },
-             onError = { showGenericError("Something went wrong") }
-         )
-     }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,14 +66,10 @@ class RatedMoviesFragment : BaseFragment() {
         linear_layout_rated_movies.gone()
     }
 
-    /*private fun initSessionId(sessionId: String) {
-        Log.d("Ikbal", sessionId)
-    }*/
-
     private fun initRecyclerView() {
         adapter = RatedMovieAdapter(requireContext())
-        rv_rated_movie_fragment.addOnScrollListener(object :
-            PaginationScrollListener(rv_rated_movie_fragment.layoutManager as LinearLayoutManager) {
+        rv_rated_movies.addOnScrollListener(object :
+            PaginationScrollListener(rv_rated_movies.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
                 ratedMovieViewModel.loadAfter()
             }
@@ -92,14 +79,13 @@ class RatedMoviesFragment : BaseFragment() {
             override val isLoading: Boolean
                 get() = ratedMovieViewModel.loading
         })
-        rv_rated_movie_fragment.adapter = adapter
+        rv_rated_movies.adapter = adapter
     }
 
     private fun initViewModel() {
         ratedMovieViewModel =
             ViewModelProvider(requireActivity()).get(RatedMovieViewModel::class.java)
         with(ratedMovieViewModel) {
-            //getString()
             getRatedMovies()
         }
     }
@@ -107,7 +93,6 @@ class RatedMoviesFragment : BaseFragment() {
     private fun initObserver() {
         with(ratedMovieViewModel) {
             ratedMovieListLiveData.observe(viewLifecycleOwner, ratedMovieObserver)
-            //sharedPreferenceStringLiveData.observe(viewLifecycleOwner, sharedPreferenceObserver)
         }
     }
 }

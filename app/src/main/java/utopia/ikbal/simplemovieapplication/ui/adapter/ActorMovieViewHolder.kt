@@ -4,12 +4,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.Constants
-import utopia.ikbal.simplemovieapplication.data.model.ActorMovieAsActorData
+import utopia.ikbal.simplemovieapplication.data.model.ActorMovieData
+import utopia.ikbal.simplemovieapplication.extensions.checkIfIsNull
 import utopia.ikbal.simplemovieapplication.extensions.inflate
 import utopia.ikbal.simplemovieapplication.extensions.load
 
@@ -21,17 +21,15 @@ class ActorMovieViewHolder(@LayoutRes layout: Int, parent: ViewGroup) :
     var requestManager: RequestManager? = null
     var movieClickListener: OnMovieClickListener? = null
 
-    fun bind(actorMovieAsActorData: ActorMovieAsActorData) {
+    fun bind(actorMovieData: ActorMovieData) {
         itemView.setOnClickListener {
-            actorMovieAsActorData.id.let { it1 -> movieClickListener?.onMovieClick(it1) }
+            actorMovieData.id.let { movieClickListener?.onMovieClick(it) }
         }
-        movieName.text = actorMovieAsActorData.original_title
-        image.load(Constants.BASE_IMAGE_URL + actorMovieAsActorData.poster_path, requestManager)
+        movieName.text = actorMovieData.originalTitle
+        image.load(Constants.BASE_IMAGE_URL + actorMovieData.posterPath, requestManager)
     }
 
     fun recycleView() {
-        if (itemView.context != null && itemView.context is AppCompatActivity && !(itemView.context as AppCompatActivity).isDestroyed) {
-            requestManager?.clear(image)
-        }
+        if (itemView.context.checkIfIsNull()) requestManager?.clear(image)
     }
 }

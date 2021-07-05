@@ -42,6 +42,8 @@ fun ImageView.loadImageWithPlaceholder(
         ): Boolean {
             return false
         }
-    })?.override(Target.SIZE_ORIGINAL)?.diskCacheStrategy(DiskCacheStrategy.DATA)?.into(this)
+    })?.override(Target.SIZE_ORIGINAL)
+        ?.diskCacheStrategy(DiskCacheStrategy.DATA)
+        ?.into(this)
 }
 

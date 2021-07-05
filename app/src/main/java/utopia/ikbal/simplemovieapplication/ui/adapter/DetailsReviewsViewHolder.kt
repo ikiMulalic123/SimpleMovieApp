@@ -19,7 +19,7 @@ class DetailsReviewsViewHolder(@LayoutRes layout: Int, parent: ViewGroup) :
 
     fun bind(reviewData: ReviewData) {
         tvReviewName.text = reviewData.author
-        ratingBar.rating = reviewData.author_details.rating /2
+        ratingBar.rating = reviewData.authorDetails.rating /2
         tvReviewInfo.text = reviewData.content
     }
 }

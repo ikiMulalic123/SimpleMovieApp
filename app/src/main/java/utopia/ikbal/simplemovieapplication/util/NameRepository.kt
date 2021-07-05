@@ -6,13 +6,13 @@ import io.reactivex.Single
 
 interface NameRepository {
 
-    fun saveString(name: String): Completable
+    fun saveStringToSharedPreference(name: String): Completable
 
-    fun saveBoolean(name: Boolean): Completable
+    fun saveBooleanToSharedPreference(name: Boolean): Completable
 
-    fun getString(): Observable<String>
+    fun getStringFromSharedPreference(): Observable<String>
 
-    fun getBoolean(): Observable<Boolean>
+    fun getBooleanFromSharedPreference(): Observable<Boolean>
 
-    fun clear(): Completable
+    fun clearFromSharedPreference(): Completable
 }

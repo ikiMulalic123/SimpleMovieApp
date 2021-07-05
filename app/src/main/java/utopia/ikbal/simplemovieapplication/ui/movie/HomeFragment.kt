@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,9 +43,6 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.img_search -> this.navigateTo(R.id.action_homeFragment_to_searchMovieFragment)
-            R.id.img_three_dots -> Toast.makeText(requireContext(),
-                getString(R.string.three_dots_clicked),
-                Toast.LENGTH_SHORT).show()
             R.id.tv_navigation_rated -> this.navigateTo(R.id.action_homeFragment_to_ratedMoviesFragment)
             R.id.tv_navigation_logout -> this.navigateTo(R.id.action_homeFragment_to_loginActivity)
         }
@@ -56,7 +52,6 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
         tv_navigation_rated.setOnClickListener(null)
         tv_navigation_logout.setOnClickListener(null)
         img_search.setOnClickListener(null)
-        img_three_dots.setOnClickListener(null)
         view_pager.adapter = null
     }
 
@@ -64,7 +59,6 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
         tv_navigation_logout.setOnClickListener(this)
         tv_navigation_rated.setOnClickListener(this)
         img_search.setOnClickListener(this)
-        img_three_dots.setOnClickListener(this)
     }
 
     private fun initTabLayout() {

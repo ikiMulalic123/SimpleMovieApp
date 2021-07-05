@@ -11,18 +11,16 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import utopia.ikbal.simplemovieapplication.data.Constants.Companion.BASE_DETAILS_MOVIE_URL
+import utopia.ikbal.simplemovieapplication.data.Constants.Companion.BASE_SEARCH_URL
+import utopia.ikbal.simplemovieapplication.data.Constants.Companion.BASE_TOKEN_URL
+import utopia.ikbal.simplemovieapplication.data.Constants.Companion.BASE_URL
 import utopia.ikbal.simplemovieapplication.network.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-
-    private const val BASE_URL = "https://api.themoviedb.org/3/discover/"
-    private const val BASE_SEARCH_URL = "https://api.themoviedb.org/3/search/"
-    private const val BASE_DETAILS_MOVIE_URL = "https://api.themoviedb.org/3/"
-    private const val BASE_TOKEN_URL = "https://api.themoviedb.org/3/authentication/"
 
     @Singleton
     @Provides
@@ -33,9 +31,11 @@ object RetrofitModule {
     @Singleton
     @Provides
     fun provideClient(): OkHttpClient {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-        return OkHttpClient.Builder().addInterceptor(interceptor).build()
+        val interceptor = CustomInterceptor()
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        return OkHttpClient.Builder().addInterceptor(interceptor)
+            .addNetworkInterceptor(httpLoggingInterceptor).build()
     }
 
     @Singleton
@@ -85,7 +85,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideLoginService(retrofit: Retrofit.Builder) : LoginApi {
+    fun provideLoginService(retrofit: Retrofit.Builder): LoginApi {
         return retrofit
             .baseUrl(BASE_TOKEN_URL)
             .build()

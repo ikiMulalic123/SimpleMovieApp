@@ -19,25 +19,25 @@ class SharedPreferenceRepo(preferences: SharedPreferences) : NameRepository {
             prefSubject.onNext(sharedPreferences)
         }
 
-    override fun saveString(name: String): Completable = prefSubject
+    override fun saveStringToSharedPreference(name: String): Completable = prefSubject
         .firstOrError()
         .editSharedPreferences {
             putString(KEY_STRING_NAME, name)
         }
 
-    override fun saveBoolean(name: Boolean): Completable =
+    override fun saveBooleanToSharedPreference(name: Boolean): Completable =
         prefSubject.firstOrError()
             .editSharedPreferences {
                 putBoolean(KEY_BOOLEAN_NAME, name)
             }
 
-    override fun getString(): Observable<String> =
+    override fun getStringFromSharedPreference(): Observable<String> =
         prefSubject.map { it.getString(KEY_STRING_NAME, "")}
 
-    override fun getBoolean(): Observable<Boolean> =
+    override fun getBooleanFromSharedPreference(): Observable<Boolean> =
         prefSubject.map { it.getBoolean(KEY_BOOLEAN_NAME, false) }
 
-    override fun clear(): Completable {
+    override fun clearFromSharedPreference(): Completable {
         return prefSubject.firstOrError()
             .clearSharedPreferences {
                 remove(KEY_STRING_NAME)

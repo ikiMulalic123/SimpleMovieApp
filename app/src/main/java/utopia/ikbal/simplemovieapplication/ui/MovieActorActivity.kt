@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.DisplayMetrics
+import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.toolbar_actor_activity.*
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.Constants
 import utopia.ikbal.simplemovieapplication.data.model.ActorData
-import utopia.ikbal.simplemovieapplication.data.model.ActorMovieAsActorData
+import utopia.ikbal.simplemovieapplication.data.model.ActorMovieData
 import utopia.ikbal.simplemovieapplication.data.model.ActorSeriesCastData
 import utopia.ikbal.simplemovieapplication.data.model.ImageData
 import utopia.ikbal.simplemovieapplication.extensions.load
@@ -33,7 +33,7 @@ import java.util.*
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class MovieActorActivity : BaseActivity() {
+class MovieActorActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var actorMovieViewModel: ActorMovieViewModel
     private lateinit var requestManager: RequestManager
@@ -44,31 +44,31 @@ class MovieActorActivity : BaseActivity() {
         processNetworkResult(
             it,
             data = { data -> submitDetails(data) },
-            onError ={ showGenericError("Something went wrong") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
-    private val actorMoviesObserver = Observer<NetworkResult<List<ActorMovieAsActorData>?>> {
+    private val actorMoviesObserver = Observer<NetworkResult<List<ActorMovieData>?>> {
         processNetworkResult(
             it,
-            data = { list -> list?.let { it1 -> actorMovieAdapter.submitList(it1) } },
-            onError = { showGenericError("Something went wrong") }
+            data = { list -> list?.let { data -> actorMovieAdapter.submitList(data) } },
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
     private val actorSeriesObserver = Observer<NetworkResult<List<ActorSeriesCastData>?>> {
         processNetworkResult(
             it,
-            data = { list -> list?.let { it1 -> actorSeriesAdapter.submitList(it1) } },
-            onError = { showGenericError("Something went wrong") }
+            data = { list -> list?.let { data -> actorSeriesAdapter.submitList(data) } },
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
     private val imageObserver = Observer<NetworkResult<List<ImageData>?>> {
         processNetworkResult(
             it,
-            data = { data -> data?.let { it1 -> initImages(it1) } },
-            onError = { showGenericError("Something went wrong") }
+            data = { data -> initImages(data) },
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -79,11 +79,17 @@ class MovieActorActivity : BaseActivity() {
         initObserver()
         initMovieRecyclerView()
         initSeriesRecyclerView()
-        initOnBackPressed()
+        initClickListener()
     }
 
-    private fun initOnBackPressed() {
-        img_actor_back_button.setOnClickListener { finish() }
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.img_actor_back_button -> finish()
+        }
+    }
+
+    private fun initClickListener() {
+        img_actor_back_button.setOnClickListener(this)
     }
 
     private fun submitDetails(data: ActorData) {
@@ -99,10 +105,11 @@ class MovieActorActivity : BaseActivity() {
         val width = Resources.getSystem().displayMetrics.widthPixels
         val ratio = width / height.toFloat()
         val newHeight = (ratio * (imageData?.height ?: 1)).roundToInt()
-        img_placeholder_actor.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, newHeight)
+        img_placeholder_actor.layoutParams =
+            ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, newHeight)
         (img_placeholder_actor.layoutParams as ConstraintLayout.LayoutParams).topToBottom =
             R.id.toolbar_actor_movie
-        img_cast_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData?.file_path,
+        img_cast_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData?.filePath,
             requestManager)
     }
 
@@ -125,14 +132,14 @@ class MovieActorActivity : BaseActivity() {
     private fun initObserver() {
         with(actorMovieViewModel) {
             actorLiveData.observe(this@MovieActorActivity, actorDetailsObserver)
-            actorMovieAsActorLiveData.observe(this@MovieActorActivity, actorMoviesObserver)
-            actorSeriesAsActorLiveData.observe(this@MovieActorActivity, actorSeriesObserver)
+            actorMovieLiveData.observe(this@MovieActorActivity, actorMoviesObserver)
+            actorSeriesLiveData.observe(this@MovieActorActivity, actorSeriesObserver)
             actorImagesLiveData.observe(this@MovieActorActivity, imageObserver)
         }
     }
 
     private fun initViewModel() {
-        val castId = intent.getIntExtra(CAST_ID, -1)
+        val castId = intent.getIntExtra(CAST_ID, INVALID_ID)
         if (castId == -1) finish()
         requestManager = Glide.with(this)
         actorMovieViewModel = ViewModelProvider(this).get(ActorMovieViewModel::class.java)
@@ -146,6 +153,7 @@ class MovieActorActivity : BaseActivity() {
 
     companion object {
         const val CAST_ID = "cast_id"
+        private const val INVALID_ID = -1
 
         private fun createLaunchIntent(context: Context, castId: Int) =
             Intent(context, MovieActorActivity::class.java).apply {

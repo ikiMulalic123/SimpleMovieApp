@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import utopia.ikbal.simplemovieapplication.data.model.ActorData
-import utopia.ikbal.simplemovieapplication.data.model.ActorMovieAsActorData
+import utopia.ikbal.simplemovieapplication.data.model.ActorMovieData
 import utopia.ikbal.simplemovieapplication.data.model.ActorSeriesCastData
 import utopia.ikbal.simplemovieapplication.data.model.ImageData
 import utopia.ikbal.simplemovieapplication.extensions.applySchedulers
@@ -19,17 +19,17 @@ class ActorMovieViewModel
 constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewModel() {
 
     private val _actorLiveData = MutableLiveData<NetworkResult<ActorData>?>()
-    private val _actorMovieAsActorLiveData =
-        MutableLiveData<NetworkResult<List<ActorMovieAsActorData>?>>()
-    private val _actorSeriesAsActorLiveData =
+    private val _actorMovieLiveData =
+        MutableLiveData<NetworkResult<List<ActorMovieData>?>>()
+    private val _actorSeriesLiveData =
         MutableLiveData<NetworkResult<List<ActorSeriesCastData>?>>()
     private val _actorImagesLiveData = MutableLiveData<NetworkResult<List<ImageData>?>>()
 
     val actorLiveData: LiveData<NetworkResult<ActorData>?> = _actorLiveData
-    val actorMovieAsActorLiveData: LiveData<NetworkResult<List<ActorMovieAsActorData>?>> =
-        _actorMovieAsActorLiveData
-    val actorSeriesAsActorLiveData: LiveData<NetworkResult<List<ActorSeriesCastData>?>> =
-        _actorSeriesAsActorLiveData
+    val actorMovieLiveData: LiveData<NetworkResult<List<ActorMovieData>?>> =
+        _actorMovieLiveData
+    val actorSeriesLiveData: LiveData<NetworkResult<List<ActorSeriesCastData>?>> =
+        _actorSeriesLiveData
     val actorImagesLiveData: LiveData<NetworkResult<List<ImageData>?>> = _actorImagesLiveData
 
     fun getDetails(actorId: Int) {
@@ -50,12 +50,12 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
         addToDisposable(actorMovieRepository.getActorMovies(actorId)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                _actorMovieAsActorLiveData.value = NetworkResult.Loading
+                _actorMovieLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                _actorMovieAsActorLiveData.value = NetworkResult.Data(it.cast)
+                _actorMovieLiveData.value = NetworkResult.Data(it.cast)
             }, {
-                _actorMovieAsActorLiveData.value = NetworkResult.Error(it)
+                _actorMovieLiveData.value = NetworkResult.Error(it)
             })
         )
     }
@@ -64,12 +64,12 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
         addToDisposable(actorMovieRepository.getActorSeries(actorId)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                _actorSeriesAsActorLiveData.value = NetworkResult.Loading
+                _actorSeriesLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                _actorSeriesAsActorLiveData.value = NetworkResult.Data(it.cast)
+                _actorSeriesLiveData.value = NetworkResult.Data(it.cast)
             }, {
-                _actorSeriesAsActorLiveData.value = NetworkResult.Error(it)
+                _actorSeriesLiveData.value = NetworkResult.Error(it)
             })
         )
     }

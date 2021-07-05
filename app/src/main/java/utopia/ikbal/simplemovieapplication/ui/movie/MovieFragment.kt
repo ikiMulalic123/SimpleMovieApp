@@ -35,7 +35,7 @@ class MovieFragment : BaseFragment() {
             ::showLoading,
             ::hideLoading,
             { list -> list?.let { it1 -> adapter.submitList(it1) } },
-            { showGenericError("Something went wrong") })
+            { showGenericError(getString(R.string.something_went_wrong)) })
     }
 
     override fun onCreateView(
