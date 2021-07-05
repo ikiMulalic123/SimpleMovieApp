@@ -54,11 +54,6 @@ class MovieFragment : BaseFragment() {
         initObservers()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        adapter.clearList()
-    }
-
     private fun initSwipeRefresh() {
         swipe_refresh.setOnRefreshListener {
             updateDataOnRefresh()

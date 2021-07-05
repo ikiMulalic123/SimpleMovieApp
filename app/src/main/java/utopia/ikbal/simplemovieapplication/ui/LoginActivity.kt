@@ -48,11 +48,9 @@ class LoginActivity : BaseActivity() {
 
     private fun checkIfLoginSucceeded(sessionData: SessionData) {
         if (sessionData.success == true) {
-            sessionData.sessionId?.let { Log.d("Ikbal", it) }
             Toast.makeText(this, "You successfully logged in", Toast.LENGTH_SHORT).show()
             loginViewModel.saveBoolean(true)
             sessionData.sessionId?.let {
-                Log.d("Ikbal","From sessionId, sessionId is $it")
                 loginViewModel.saveString(it) }
             HomeActivity.launch(this)
         } else {

@@ -26,20 +26,13 @@ interface LoginApi {
         @Body body : LoginData
     ): Single<LoginResponseData>
 
-    @POST(CREATE_SESSION)
-    fun createSessionWithLogin(
-        @Query(API_KEY) token: String,
-        @Body body : CreateSessionData
-    ) : Single<CreateSessionResponseData>
-
     companion object {
         private const val API_KEY = "api_key"
         private const val NEW = "new"
         private const val _TOKEN = "token/"
         private const val SESSION = "session/"
-        private const val TOKEN = "$_TOKEN$NEW"
+        private const val TOKEN = "token/$NEW"
         private const val NEW_SESSION = "$SESSION$NEW"
         private const val LOGIN_SESSION = "${_TOKEN}validate_with_login"
-        private const val CREATE_SESSION = "${SESSION}convert/4"
     }
 }

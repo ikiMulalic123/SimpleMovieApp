@@ -55,7 +55,7 @@ class RatedMoviesFragment : BaseFragment() {
     }
 
     private fun onBackPressed() {
-        if (!progress_bar_search.isVisible()) {
+        if (!linear_layout_rated_movies.isVisible()) {
             this.navigateUp()
         }
     }

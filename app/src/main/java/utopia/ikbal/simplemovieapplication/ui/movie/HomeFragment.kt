@@ -43,9 +43,6 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            /*R.id.img_nav_menu -> Toast.makeText(requireContext(),
-                getString(R.string.navigation_clicked),
-                Toast.LENGTH_SHORT).show()*/
             R.id.img_search -> this.navigateTo(R.id.action_homeFragment_to_searchMovieFragment)
             R.id.img_three_dots -> Toast.makeText(requireContext(),
                 getString(R.string.three_dots_clicked),
@@ -56,9 +53,6 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun clearInstances() {
-/*
-        img_nav_menu.setOnClickListener(null)
-*/
         tv_navigation_rated.setOnClickListener(null)
         tv_navigation_logout.setOnClickListener(null)
         img_search.setOnClickListener(null)
@@ -67,9 +61,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun initClickListener() {
-/*
-        img_nav_menu.setOnClickListener(this)
-*/      tv_navigation_logout.setOnClickListener(this)
+        tv_navigation_logout.setOnClickListener(this)
         tv_navigation_rated.setOnClickListener(this)
         img_search.setOnClickListener(this)
         img_three_dots.setOnClickListener(this)

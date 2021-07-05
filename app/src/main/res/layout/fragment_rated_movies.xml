@@ -39,7 +39,7 @@
         android:visibility="gone">
 
         <ProgressBar
-            android:id="@+id/progress_bar"
+            android:id="@+id/progress_bar_rated"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

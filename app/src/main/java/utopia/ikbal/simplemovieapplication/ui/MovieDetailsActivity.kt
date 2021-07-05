@@ -7,6 +7,7 @@ import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
@@ -38,6 +39,7 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class MovieDetailsActivity : BaseActivity() {
 
+    private var movieId: Int = 0
     private lateinit var detailsMovieViewModel: DetailsMovieViewModel
     private lateinit var requestManager: RequestManager
     private lateinit var adapterCast: DetailsCastAdapter
@@ -46,20 +48,16 @@ class MovieDetailsActivity : BaseActivity() {
     private val detailsObserver = Observer<NetworkResult<DetailsData>?> {
         processNetworkResult(
             it,
-            ::showLoading,
-            ::hideLoading,
-            { data -> submitDetailsData(data) },
-            { showGenericError("Something went wrong") }
+            data = { data -> submitDetailsData(data) },
+            onError = { showGenericError("Something went wrong") }
         )
     }
 
     private val videosObserver = Observer<NetworkResult<List<VideoData>?>> {
         processNetworkResult(
             it,
-            ::showLoading,
-            ::hideLoading,
-            { list -> list?.let { data -> initializeVideo(data) } },
-            { showGenericError("something went wrong") }
+            data = { list -> list?.let { data -> initializeVideo(data) } },
+            onError = { showGenericError("something went wrong") }
         )
     }
 
@@ -74,26 +72,23 @@ class MovieDetailsActivity : BaseActivity() {
     private val castsObserver = Observer<NetworkResult<List<CastData>?>> {
         processNetworkResult(
             it,
-            ::showLoading,
-            ::hideLoading,
-            { list -> list?.let { data -> adapterCast.submitList(data) } },
-            { showGenericError("Something went wrong") }
+            data = { list -> list?.let { data -> adapterCast.submitList(data) } },
+            onError = { showGenericError("Something went wrong") }
         )
     }
 
     private val reviewsObserver = Observer<NetworkResult<List<ReviewData>?>> {
         processNetworkResult(
             it,
-            ::showLoading,
-            ::hideLoading,
-            { list -> list?.let { data -> adapterReview.submitList(data) } },
-            { showGenericError("Something went wrong") }
+            data = { list -> list?.let { data -> adapterReview.submitList(data) } },
+            onError = { showGenericError("Something went wrong") }
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
+        initMovieId()
         initViewModel()
         initCastRecyclerView()
         initReviewRecyclerView()
@@ -102,12 +97,18 @@ class MovieDetailsActivity : BaseActivity() {
         initRating()
     }
 
-    private fun showLoading() {
-
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        movieId = intent.getIntExtra(MOVIE_ID, -1)
+        initViewModel()
+        if (movieId == -1) finish()
     }
 
-    private fun hideLoading() {
-
+    private fun initMovieId() {
+        movieId = intent.getIntExtra(MOVIE_ID, -1)
+        if (movieId == -1) finish()
+        requestManager = Glide.with(this)
+        detailsMovieViewModel = ViewModelProvider(this).get(DetailsMovieViewModel::class.java)
     }
 
     private fun initOnBackPressed() {
@@ -145,8 +146,6 @@ class MovieDetailsActivity : BaseActivity() {
     }
 
     private fun initRating() {
-        val movieId = intent.getIntExtra(MOVIE_ID, -1)
-        if (movieId == -1) finish()
         tv_rate_movie.setOnClickListener {
             RateMovieBottomSheetFragment.show(supportFragmentManager, movieId)
         }
@@ -170,8 +169,6 @@ class MovieDetailsActivity : BaseActivity() {
     }
 
     private fun initReviewRecyclerView() {
-        val movieId = intent.getIntExtra(MOVIE_ID, -1)
-        if (movieId == -1) finish()
         adapterReview = DetailsReviewsAdapter()
         rv_details_reviews.addOnScrollListener(object :
             PaginationScrollListener(rv_details_reviews.layoutManager as LinearLayoutManager) {
@@ -188,10 +185,6 @@ class MovieDetailsActivity : BaseActivity() {
     }
 
     private fun initViewModel() {
-        val movieId = intent.getIntExtra(MOVIE_ID, -1)
-        if (movieId == -1) finish()
-        requestManager = Glide.with(this)
-        detailsMovieViewModel = ViewModelProvider(this).get(DetailsMovieViewModel::class.java)
         with(detailsMovieViewModel) {
             getDetails(movieId)
             getVideos(movieId)

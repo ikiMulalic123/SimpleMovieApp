@@ -43,40 +43,32 @@ class MovieActorActivity : BaseActivity() {
     private val actorDetailsObserver = Observer<NetworkResult<ActorData>?> {
         processNetworkResult(
             it,
-            ::showLoading,
-            ::hideLoading,
-            { data -> submitDetails(data) },
-            { showGenericError("Something went wrong") }
+            data = { data -> submitDetails(data) },
+            onError ={ showGenericError("Something went wrong") }
         )
     }
 
     private val actorMoviesObserver = Observer<NetworkResult<List<ActorMovieAsActorData>?>> {
         processNetworkResult(
             it,
-            ::showLoading,
-            ::hideLoading,
-            { list -> list?.let { it1 -> actorMovieAdapter.submitList(it1) } },
-            { showGenericError("Something went wrong") }
+            data = { list -> list?.let { it1 -> actorMovieAdapter.submitList(it1) } },
+            onError = { showGenericError("Something went wrong") }
         )
     }
 
     private val actorSeriesObserver = Observer<NetworkResult<List<ActorSeriesCastData>?>> {
         processNetworkResult(
             it,
-            ::showLoading,
-            ::hideLoading,
-            { list -> list?.let { it1 -> actorSeriesAdapter.submitList(it1) } },
-            { showGenericError("Something went wrong") }
+            data = { list -> list?.let { it1 -> actorSeriesAdapter.submitList(it1) } },
+            onError = { showGenericError("Something went wrong") }
         )
     }
 
     private val imageObserver = Observer<NetworkResult<List<ImageData>?>> {
         processNetworkResult(
             it,
-            ::showLoading,
-            ::hideLoading,
-            { data -> data?.let { it1 -> initImages(it1) } },
-            { showGenericError("Something went wrong") }
+            data = { data -> data?.let { it1 -> initImages(it1) } },
+            onError = { showGenericError("Something went wrong") }
         )
     }
 
@@ -88,14 +80,6 @@ class MovieActorActivity : BaseActivity() {
         initMovieRecyclerView()
         initSeriesRecyclerView()
         initOnBackPressed()
-    }
-
-    private fun showLoading() {
-
-    }
-
-    private fun hideLoading() {
-
     }
 
     private fun initOnBackPressed() {
@@ -120,17 +104,10 @@ class MovieActorActivity : BaseActivity() {
             R.id.toolbar_actor_movie
         img_cast_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData?.file_path,
             requestManager)
-        /*if (data.isNotEmpty()) img_cast_poster.loadImageWithPlaceholder(Constants.BASE_IMAGE_URL + data[data.size - 1].file_path,
-            requestManager)*/
     }
 
     private fun initSeriesRecyclerView() {
         actorSeriesAdapter = ActorSeriesAdapter(this)
-        actorSeriesAdapter.seriesClickListener = object : OnMovieClickListener {
-            override fun onMovieClick(castId: Int) {
-                MovieDetailsActivity.launch(this@MovieActorActivity, castId)
-            }
-        }
         rv_actor_tv_series.adapter = actorSeriesAdapter
     }
 
@@ -138,6 +115,7 @@ class MovieActorActivity : BaseActivity() {
         actorMovieAdapter = ActorMovieAdapter(this)
         actorMovieAdapter.movieClickListener = object : OnMovieClickListener {
             override fun onMovieClick(movieId: Int) {
+                finish()
                 MovieDetailsActivity.launch(this@MovieActorActivity, movieId)
             }
         }

@@ -17,7 +17,4 @@ constructor(
     fun createSession(body: TokenStringData) = loginApi.createSession(TOKEN, body)
 
     fun validateTokenLogin(body: LoginData) = loginApi.validateTokenLogin(TOKEN, body)
-
-    fun createSessionWithLogin(body: CreateSessionData) =
-        loginApi.createSessionWithLogin(TOKEN, body)
 }

@@ -6,7 +6,7 @@ import utopia.ikbal.simplemovieapplication.network.DetailsApi
 
 class DetailsMovieRepository
 constructor(
-    private val detailsApi: DetailsApi,
+    private val detailsApi: DetailsApi
 ) {
 
     fun getDetails(movieId: Int) = detailsApi.getDetails(movieId, TOKEN)

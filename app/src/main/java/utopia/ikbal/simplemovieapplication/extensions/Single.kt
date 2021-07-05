@@ -24,5 +24,5 @@ fun Single<SharedPreferences>.clearSharedPreferences(batch: SharedPreferences.Ed
         }
     }
 
-fun <T> Observable<T>.applySchedulers(scheduler: Scheduler) =
+fun <T> Observable<T>.applySchedulers(scheduler: Scheduler): Observable<T> =
     subscribeOn(scheduler).observeOn(AndroidSchedulers.mainThread())

@@ -64,6 +64,11 @@ class SearchMovieFragment : BaseFragment() {
         outState.putString(QUERY, searchView.query.toString())
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter.clearList()
+    }
+
     private fun showLoading() {
         progress_bar_search.visible()
     }

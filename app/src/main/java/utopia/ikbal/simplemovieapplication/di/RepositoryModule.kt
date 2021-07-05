@@ -37,7 +37,7 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideActorRepository(
-        actorApi: ActorApi,
+        actorApi: ActorApi
     ) = ActorMovieRepository(actorApi)
 
     @Singleton
