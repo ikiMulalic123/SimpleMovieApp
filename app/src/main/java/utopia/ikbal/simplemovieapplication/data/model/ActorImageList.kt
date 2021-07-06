@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ActorImageList(
     @SerializedName("id")
-    val id: Int?,
+    val id: Int,
     @SerializedName("profiles")
-    val profiles : List<ImageData>?
+    val profiles : List<ImageData>
 )

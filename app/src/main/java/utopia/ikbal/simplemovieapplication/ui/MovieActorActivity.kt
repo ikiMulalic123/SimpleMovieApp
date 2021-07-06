@@ -40,7 +40,7 @@ class MovieActorActivity : BaseActivity(), View.OnClickListener {
     private lateinit var actorMovieAdapter: ActorMovieAdapter
     private lateinit var actorSeriesAdapter: ActorSeriesAdapter
 
-    private val actorDetailsObserver = Observer<NetworkResult<ActorData>?> {
+    private val actorDetailsObserver = Observer<NetworkResult<ActorData>> {
         processNetworkResult(
             it,
             data = { data -> submitDetails(data) },
@@ -48,23 +48,23 @@ class MovieActorActivity : BaseActivity(), View.OnClickListener {
         )
     }
 
-    private val actorMoviesObserver = Observer<NetworkResult<List<ActorMovieData>?>> {
+    private val actorMoviesObserver = Observer<NetworkResult<List<ActorMovieData>>> {
         processNetworkResult(
             it,
-            data = { list -> list?.let { data -> actorMovieAdapter.submitList(data) } },
+            data = { list -> list.let { data -> actorMovieAdapter.submitList(data) } },
             onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
-    private val actorSeriesObserver = Observer<NetworkResult<List<ActorSeriesCastData>?>> {
+    private val actorSeriesObserver = Observer<NetworkResult<List<ActorSeriesCastData>>> {
         processNetworkResult(
             it,
-            data = { list -> list?.let { data -> actorSeriesAdapter.submitList(data) } },
+            data = { list -> list.let { data -> actorSeriesAdapter.submitList(data) } },
             onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
-    private val imageObserver = Observer<NetworkResult<List<ImageData>?>> {
+    private val imageObserver = Observer<NetworkResult<List<ImageData>>> {
         processNetworkResult(
             it,
             data = { data -> initImages(data) },
@@ -99,17 +99,17 @@ class MovieActorActivity : BaseActivity(), View.OnClickListener {
         tv_actor_info.text = data.biography
     }
 
-    private fun initImages(data: List<ImageData>?) {
-        val imageData = data?.get(0)
+    private fun initImages(data: List<ImageData>) {
+        val imageData = data.get(0)
         val height = Resources.getSystem().displayMetrics.heightPixels
         val width = Resources.getSystem().displayMetrics.widthPixels
         val ratio = width / height.toFloat()
-        val newHeight = (ratio * (imageData?.height ?: 1)).roundToInt()
+        val newHeight = (ratio * (imageData.height ?: 1)).roundToInt()
         img_placeholder_actor.layoutParams =
             ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, newHeight)
         (img_placeholder_actor.layoutParams as ConstraintLayout.LayoutParams).topToBottom =
             R.id.toolbar_actor_movie
-        img_cast_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData?.filePath,
+        img_cast_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData.filePath,
             requestManager)
     }
 

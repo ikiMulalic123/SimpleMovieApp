@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class VideoList(
     @SerializedName("id")
-    val id: Float?,
+    val id: Float,
     @SerializedName("results")
-    var results: List<VideoData>?,
+    var results: List<VideoData>
 )

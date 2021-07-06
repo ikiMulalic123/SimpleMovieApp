@@ -16,18 +16,18 @@ class RatedMovieViewModel
 @Inject
 constructor(
     private val ratedMovieRepository: RatedMovieRepository,
-    private val sharedPreferenceRepository: SharedPreferenceRepository,
+    private val sharedPreferenceRepository: SharedPreferenceRepository
 ) : BaseViewModel() {
 
-    private val _ratedMovieListLiveData = MutableLiveData<NetworkResult<List<RatedMovieData>?>>()
-    private val _sharedPreferenceStringLiveData = MutableLiveData<NetworkResult<String>?>()
+    private val _ratedMovieListLiveData = MutableLiveData<NetworkResult<List<RatedMovieData>>>()
+    private val _sharedPreferenceStringLiveData = MutableLiveData<NetworkResult<String>>()
 
     private var page: Int = 1
     private var totalPages: Int? = 1
 
-    val ratedMovieListLiveData: LiveData<NetworkResult<List<RatedMovieData>?>> =
+    val ratedMovieListLiveData: LiveData<NetworkResult<List<RatedMovieData>>> =
         _ratedMovieListLiveData
-    val sharedPreferenceStringLiveData: LiveData<NetworkResult<String>?> =
+    val sharedPreferenceStringLiveData: LiveData<NetworkResult<String>> =
         _sharedPreferenceStringLiveData
 
     var loading: Boolean = false
@@ -77,22 +77,5 @@ constructor(
                 loading = false
             })
         )
-    }
-
-    fun saveStringToSharedPreference(name: String) {
-        addToDisposable(sharedPreferenceRepository.saveStringToSharedPreference(name).subscribe())
-    }
-
-    fun getStringFromSharedPreference() {
-        addToDisposable(sharedPreferenceRepository.getStringFromSharedPreference()
-            .subscribe({
-                _sharedPreferenceStringLiveData.value = NetworkResult.Data(it)
-            }, {
-                _sharedPreferenceStringLiveData.value = NetworkResult.Error(it)
-            }))
-    }
-
-    fun clearFromSharedPreference() {
-        addToDisposable(sharedPreferenceRepository.clearFromSharedPreference().subscribe())
     }
 }

@@ -26,12 +26,12 @@ class SearchMovieFragment : BaseFragment() {
     private lateinit var searchMovieViewModel: SearchMovieViewModel
     private lateinit var adapter: MovieAdapter
 
-    private val filteredMovieListObserver = Observer<NetworkResult<List<MovieData>>> { it ->
+    private val filteredMovieListObserver = Observer<NetworkResult<List<MovieData>>> {
         processNetworkResult(
             it,
             ::showLoading,
             ::hideLoading,
-            { list -> list?.let { it1 -> adapter.submitList(it1) } },
+            { list -> list.let { it1 -> adapter.submitList(it1) } },
             noData = {
                 showNoResultsFound(true)
             },

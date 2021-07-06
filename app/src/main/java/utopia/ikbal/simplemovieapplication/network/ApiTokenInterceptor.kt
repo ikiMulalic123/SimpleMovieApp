@@ -4,14 +4,18 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import utopia.ikbal.simplemovieapplication.data.Constants.Companion.TOKEN
 
-class CustomInterceptor : Interceptor {
+class ApiTokenInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val url = chain.request().url
             .newBuilder()
-            .addQueryParameter("api_key", TOKEN)
+            .addQueryParameter(API_KEY, TOKEN)
             .build()
 
         val request = chain.request().newBuilder().url(url).build()
         return chain.proceed(request)
+    }
+
+    companion object {
+        private const val API_KEY = "api_key"
     }
 }

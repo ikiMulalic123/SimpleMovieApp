@@ -4,9 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class CreditsData(
     @SerializedName("id")
-    val id: Int?,
+    val id: Int,
     @SerializedName("cast")
-    val cast: List<CastData>?,
-    @SerializedName("crew")
-    val crew: List<Any>?
+    val cast: List<CastData>
 )

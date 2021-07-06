@@ -18,19 +18,19 @@ class ActorMovieViewModel
 @Inject
 constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewModel() {
 
-    private val _actorLiveData = MutableLiveData<NetworkResult<ActorData>?>()
+    private val _actorLiveData = MutableLiveData<NetworkResult<ActorData>>()
     private val _actorMovieLiveData =
-        MutableLiveData<NetworkResult<List<ActorMovieData>?>>()
+        MutableLiveData<NetworkResult<List<ActorMovieData>>>()
     private val _actorSeriesLiveData =
-        MutableLiveData<NetworkResult<List<ActorSeriesCastData>?>>()
-    private val _actorImagesLiveData = MutableLiveData<NetworkResult<List<ImageData>?>>()
+        MutableLiveData<NetworkResult<List<ActorSeriesCastData>>>()
+    private val _actorImagesLiveData = MutableLiveData<NetworkResult<List<ImageData>>>()
 
-    val actorLiveData: LiveData<NetworkResult<ActorData>?> = _actorLiveData
-    val actorMovieLiveData: LiveData<NetworkResult<List<ActorMovieData>?>> =
+    val actorLiveData: LiveData<NetworkResult<ActorData>> = _actorLiveData
+    val actorMovieLiveData: LiveData<NetworkResult<List<ActorMovieData>>> =
         _actorMovieLiveData
-    val actorSeriesLiveData: LiveData<NetworkResult<List<ActorSeriesCastData>?>> =
+    val actorSeriesLiveData: LiveData<NetworkResult<List<ActorSeriesCastData>>> =
         _actorSeriesLiveData
-    val actorImagesLiveData: LiveData<NetworkResult<List<ImageData>?>> = _actorImagesLiveData
+    val actorImagesLiveData: LiveData<NetworkResult<List<ImageData>>> = _actorImagesLiveData
 
     fun getDetails(actorId: Int) {
         addToDisposable(actorMovieRepository.getActorDetails(actorId)

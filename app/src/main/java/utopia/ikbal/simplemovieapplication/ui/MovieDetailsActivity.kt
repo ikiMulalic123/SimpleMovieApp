@@ -44,7 +44,7 @@ class MovieDetailsActivity : BaseActivity() {
     private lateinit var adapterCast: DetailsCastAdapter
     private lateinit var adapterReview: DetailsReviewsAdapter
 
-    private val detailsObserver = Observer<NetworkResult<DetailsData>?> {
+    private val detailsObserver = Observer<NetworkResult<DetailsData>> {
         processNetworkResult(
             it,
             data = { data -> submitDetailsData(data) },
@@ -52,15 +52,15 @@ class MovieDetailsActivity : BaseActivity() {
         )
     }
 
-    private val videosObserver = Observer<NetworkResult<List<VideoData>?>> {
+    private val videosObserver = Observer<NetworkResult<List<VideoData>>> {
         processNetworkResult(
             it,
-            data = { list -> list?.let { data -> initializeVideo(data) } },
+            data = { list -> list.let { data -> initializeVideo(data) } },
             onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
-    private val imagesObserver = Observer<NetworkResult<List<ImageData>?>> {
+    private val imagesObserver = Observer<NetworkResult<List<ImageData>>> {
         processNetworkResult(
             it,
             data = { list -> initImage(list) },
@@ -68,18 +68,18 @@ class MovieDetailsActivity : BaseActivity() {
         )
     }
 
-    private val castsObserver = Observer<NetworkResult<List<CastData>?>> {
+    private val castsObserver = Observer<NetworkResult<List<CastData>>> {
         processNetworkResult(
             it,
-            data = { list -> list?.let { data -> adapterCast.submitList(data) } },
+            data = { list -> list.let { data -> adapterCast.submitList(data) } },
             onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
-    private val reviewsObserver = Observer<NetworkResult<List<ReviewData>?>> {
+    private val reviewsObserver = Observer<NetworkResult<List<ReviewData>>> {
         processNetworkResult(
             it,
-            data = { list -> list?.let { data -> adapterReview.submitList(data) } },
+            data = { list -> list.let { data -> adapterReview.submitList(data) } },
             onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
@@ -113,26 +113,26 @@ class MovieDetailsActivity : BaseActivity() {
         img_details_back_button.setOnClickListener { finish() }
     }
 
-    private fun initImage(data: List<ImageData>?) {
-        val imageData = data?.get(0)
+    private fun initImage(data: List<ImageData>) {
+        val imageData = data.get(0)
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val height = Resources.getSystem().displayMetrics.heightPixels
         val width = Resources.getSystem().displayMetrics.widthPixels
         val ratio = width / height.toFloat()
-        val newHeight = (ratio * (imageData?.height ?: 1)).roundToInt()
+        val newHeight = (ratio * (imageData.height ?: 1)).roundToInt()
         img_placeholder.layoutParams = ConstraintLayout.LayoutParams(MATCH_PARENT, newHeight)
         (img_placeholder.layoutParams as ConstraintLayout.LayoutParams).topToBottom =
             R.id.toolbar_details_movie
-        img_details_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData?.filePath,
+        img_details_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData.filePath,
             requestManager)
     }
 
-    private fun initializeVideo(data: List<VideoData>?) {
-        if (data?.isEmpty() == true) return
+    private fun initializeVideo(data: List<VideoData>) {
+        if (data.isEmpty()) return
         else linear_layout_img_play.visible()
-        val ytIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_url) + data?.get(0)?.key))
-        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_URL + data?.get(0)?.key))
+        val ytIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_url) + data[0].key))
+        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_URL + data[0].key))
 
         btn_details_play.setOnClickListener {
             try {

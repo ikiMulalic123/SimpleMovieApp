@@ -20,7 +20,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener{
 
     private lateinit var loginViewModel: LoginViewModel
 
-    private val loginObserver = Observer<NetworkResult<SessionData>?> {
+    private val loginObserver = Observer<NetworkResult<SessionData>> {
         processNetworkResult(
             it,
             data = { data -> checkIfLoginSucceeded(data) },

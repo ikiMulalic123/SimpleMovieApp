@@ -22,13 +22,13 @@ class RatedMoviesFragment : BaseFragment() {
     private lateinit var ratedMovieViewModel: RatedMovieViewModel
     private lateinit var adapter: RatedMovieAdapter
 
-    private val ratedMovieObserver = Observer<NetworkResult<List<RatedMovieData>?>> {
+    private val ratedMovieObserver = Observer<NetworkResult<List<RatedMovieData>>> {
         processNetworkResult(
             it,
             ::showLoading,
             ::hideLoading,
-            { list -> list?.let { data -> adapter.submitList(data) } },
-            { showGenericError("Something went wrong") }
+            { list -> list.let { data -> adapter.submitList(data) } },
+            { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 

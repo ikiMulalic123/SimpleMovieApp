@@ -29,12 +29,12 @@ class MovieFragment : BaseFragment() {
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var adapter: MovieAdapter
 
-    private val movieListObserver = Observer<NetworkResult<List<MovieData>?>> {
+    private val movieListObserver = Observer<NetworkResult<List<MovieData>>> {
         processNetworkResult(
             it,
             ::showLoading,
             ::hideLoading,
-            { list -> list?.let { it1 -> adapter.submitList(it1) } },
+            { list -> list.let { it1 -> adapter.submitList(it1) } },
             { showGenericError(getString(R.string.something_went_wrong)) })
     }
 

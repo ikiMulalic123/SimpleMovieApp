@@ -16,26 +16,16 @@ class LoginViewModel
 @Inject
 constructor(
     private val loginRepository: LoginRepository,
-    private val sharedPreferenceRepository: SharedPreferenceRepository,
+    private val sharedPreferenceRepository: SharedPreferenceRepository
 ) : BaseViewModel() {
 
-    private val _tokenLiveData = MutableLiveData<NetworkResult<TokenData>?>()
-    private val _sessionLiveData = MutableLiveData<NetworkResult<SessionData>?>()
-    private val _validateTokenLiveData = MutableLiveData<NetworkResult<LoginResponseData>?>()
-    private val _sessionWithLoginLiveData =
-        MutableLiveData<NetworkResult<CreateSessionResponseData>>()
-    private val _sharedPreferenceStringLiveData = MutableLiveData<NetworkResult<String>?>()
-    private val _sharedPreferenceBooleanLiveData = MutableLiveData<NetworkResult<Boolean>?>()
+    private val _sessionLiveData = MutableLiveData<NetworkResult<SessionData>>()
+    private val _sharedPreferenceStringLiveData = MutableLiveData<NetworkResult<String>>()
+    private val _sharedPreferenceBooleanLiveData = MutableLiveData<NetworkResult<Boolean>>()
 
-    val tokenLiveData: LiveData<NetworkResult<TokenData>?> = _tokenLiveData
-    val sessionLiveData: LiveData<NetworkResult<SessionData>?> = _sessionLiveData
-    val validateTokenLiveData: LiveData<NetworkResult<LoginResponseData>?> = _validateTokenLiveData
-    val sessionWithLoginLiveData: LiveData<NetworkResult<CreateSessionResponseData>?> =
-        _sessionWithLoginLiveData
-    val sharedPreferenceStringLiveData: LiveData<NetworkResult<String>?> =
+    val sessionLiveData: LiveData<NetworkResult<SessionData>> = _sessionLiveData
+    val sharedPreferenceStringLiveData: LiveData<NetworkResult<String>> =
         _sharedPreferenceStringLiveData
-    val sharedPreferenceBooleanLiveData: LiveData<NetworkResult<Boolean>?> =
-        _sharedPreferenceBooleanLiveData
     var loading: Boolean = false
 
     fun login(username: String, password: String) {

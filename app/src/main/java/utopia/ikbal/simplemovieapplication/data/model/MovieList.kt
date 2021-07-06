@@ -12,5 +12,5 @@ data class MovieList(
     @SerializedName("total_results")
     val totalResults: Int,
     @SerializedName("errors")
-    val errors: List<String>?
+    val errors: List<String>
 )

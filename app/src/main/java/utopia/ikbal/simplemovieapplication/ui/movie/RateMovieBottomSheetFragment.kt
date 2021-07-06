@@ -30,7 +30,7 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
         )
     }
 
-    private val sharedPreferenceObserver = Observer<NetworkResult<String>?> {
+    private val sharedPreferenceObserver = Observer<NetworkResult<String>> {
         processNetworkResult(
             it,
             data = { data -> initRateMovie(data) },
@@ -56,9 +56,10 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
 
     private fun rateMovieSuccession(rateMovieResponseData: RateMovieResponseData) {
         if (rateMovieResponseData.status_code == SUCCESS ||
-            rateMovieResponseData.status_code == SUCCESSFULLY_UPDATED) {
+            rateMovieResponseData.status_code == SUCCESSFULLY_UPDATED
+        ) {
             ToastUtil.showShortToast(requireContext(), getString(R.string.movie_rated_successful))
-            } else
+        } else
             ToastUtil.showShortToast(requireContext(), getString(R.string.movie_rated_failed))
         dismiss()
     }

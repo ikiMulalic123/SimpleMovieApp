@@ -15,20 +15,20 @@ class DetailsMovieViewModel
 @Inject
 constructor(private val detailsMovieRepository: DetailsMovieRepository) : BaseViewModel() {
 
-    private val _detailsLiveData = MutableLiveData<NetworkResult<DetailsData>?>()
-    private val _castLiveData = MutableLiveData<NetworkResult<List<CastData>?>>()
-    private val _reviewsLiveData = MutableLiveData<NetworkResult<List<ReviewData>?>>()
-    private val _videosLiveData = MutableLiveData<NetworkResult<List<VideoData>?>>()
-    private val _imagesLiveData = MutableLiveData<NetworkResult<List<ImageData>?>>()
+    private val _detailsLiveData = MutableLiveData<NetworkResult<DetailsData>>()
+    private val _castLiveData = MutableLiveData<NetworkResult<List<CastData>>>()
+    private val _reviewsLiveData = MutableLiveData<NetworkResult<List<ReviewData>>>()
+    private val _videosLiveData = MutableLiveData<NetworkResult<List<VideoData>>>()
+    private val _imagesLiveData = MutableLiveData<NetworkResult<List<ImageData>>>()
 
     private var page: Int = 1
     private var totalPages: Int? = 1
 
-    val videosLiveData: LiveData<NetworkResult<List<VideoData>?>> = _videosLiveData
-    val imagesLiveData: LiveData<NetworkResult<List<ImageData>?>> = _imagesLiveData
-    val detailsLiveData: LiveData<NetworkResult<DetailsData>?> = _detailsLiveData
-    val castLiveData: LiveData<NetworkResult<List<CastData>?>> = _castLiveData
-    val reviewsLiveData: LiveData<NetworkResult<List<ReviewData>?>> = _reviewsLiveData
+    val videosLiveData: LiveData<NetworkResult<List<VideoData>>> = _videosLiveData
+    val imagesLiveData: LiveData<NetworkResult<List<ImageData>>> = _imagesLiveData
+    val detailsLiveData: LiveData<NetworkResult<DetailsData>> = _detailsLiveData
+    val castLiveData: LiveData<NetworkResult<List<CastData>>> = _castLiveData
+    val reviewsLiveData: LiveData<NetworkResult<List<ReviewData>>> = _reviewsLiveData
 
     var loading: Boolean = false
     var isLastPage: Boolean = false
