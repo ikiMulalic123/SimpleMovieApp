@@ -5,35 +5,37 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search_movie.*
 import utopia.ikbal.simplemovieapplication.R
-import utopia.ikbal.simplemovieapplication.data.MovieData
+import utopia.ikbal.simplemovieapplication.data.model.MovieData
 import utopia.ikbal.simplemovieapplication.extensions.*
+import utopia.ikbal.simplemovieapplication.ui.MovieDetailsActivity
 import utopia.ikbal.simplemovieapplication.ui.adapter.MovieAdapter
 import utopia.ikbal.simplemovieapplication.ui.adapter.OnMovieClickListener
 import utopia.ikbal.simplemovieapplication.ui.base.BaseFragment
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
 import utopia.ikbal.simplemovieapplication.util.PaginationScrollListener
 
+@AndroidEntryPoint
 class SearchMovieFragment : BaseFragment() {
 
     private lateinit var searchMovieViewModel: SearchMovieViewModel
     private lateinit var adapter: MovieAdapter
 
-    private val filteredMovieListObserver = Observer<NetworkResult<List<MovieData>?>> {
+    private val filteredMovieListObserver = Observer<NetworkResult<List<MovieData>>> {
         processNetworkResult(
             it,
             ::showLoading,
             ::hideLoading,
-            { list -> list?.let { it1 -> adapter.submitList(it1) } },
+            { list -> list.let { it1 -> adapter.submitList(it1) } },
             noData = {
-                Toast.makeText(requireContext(), " alksdja", Toast.LENGTH_SHORT).show()
+                showNoResultsFound(true)
             },
-            { showGenericError("Error") }
+            onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
@@ -44,7 +46,6 @@ class SearchMovieFragment : BaseFragment() {
     ): View? =
         inflater.inflate(R.layout.fragment_search_movie, container, false)
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
@@ -52,6 +53,20 @@ class SearchMovieFragment : BaseFragment() {
         initRecyclerView()
         initSearchView()
         initOnBackPressedDispatcher()
+        if (savedInstanceState != null) {
+            val oldQuery = savedInstanceState.get(QUERY)
+            searchMovieViewModel.loadInitial(oldQuery.toString())
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(QUERY, searchView.query.toString())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter.clearList()
     }
 
     private fun showLoading() {
@@ -62,8 +77,15 @@ class SearchMovieFragment : BaseFragment() {
         progress_bar_search.gone()
     }
 
-    private fun initOnBackPressedDispatcher() {
-        this.addOnBackPressedDispatcher { onBackPressed() }
+    private fun showNoResultsFound(haveResult: Boolean) {
+        if (haveResult) {
+            text_view_no_results_found.text = getString(R.string.no_results_for_such_criteria)
+        }
+        text_view_no_results_found.visible()
+    }
+
+    private fun hideNoResultsFound() {
+        text_view_no_results_found.gone()
     }
 
     private fun onBackPressed() {
@@ -72,20 +94,27 @@ class SearchMovieFragment : BaseFragment() {
         }
     }
 
+    private fun initOnBackPressedDispatcher() {
+        this.addOnBackPressedDispatcher { onBackPressed() }
+        searchView.setOnClickListener{
+            navigateUp()
+        }
+    }
+
     private fun initSearchView() {
-        searchView.isIconified = false
+        showNoResultsFound(false)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 adapter.clearList()
                 query?.let { searchMovieViewModel.loadInitial(it) }
                 searchView.clearFocus()
+                hideNoResultsFound()
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 return false
             }
-
         })
     }
 
@@ -93,8 +122,7 @@ class SearchMovieFragment : BaseFragment() {
         adapter = MovieAdapter(requireContext())
         adapter.movieClickListener = object : OnMovieClickListener {
             override fun onMovieClick(movieId: Int) {
-                Toast.makeText(requireContext(), "You clicked on $movieId item", Toast.LENGTH_SHORT)
-                    .show()
+                MovieDetailsActivity.launch(requireContext(), movieId)
             }
         }
         recycler_view_search_movie.addOnScrollListener(object :
@@ -106,7 +134,7 @@ class SearchMovieFragment : BaseFragment() {
             override val isLastPage: Boolean
                 get() = searchMovieViewModel.isLastPage
             override val isLoading: Boolean
-                get() = searchMovieViewModel.loading
+                get() = searchMovieViewModel.movieListLiveData.value == NetworkResult.Loading
         })
         recycler_view_search_movie.adapter = adapter
     }
@@ -119,5 +147,9 @@ class SearchMovieFragment : BaseFragment() {
         with(searchMovieViewModel) {
             movieListLiveData.observe(viewLifecycleOwner, filteredMovieListObserver)
         }
+    }
+
+    companion object {
+        private const val QUERY = "query"
     }
 }

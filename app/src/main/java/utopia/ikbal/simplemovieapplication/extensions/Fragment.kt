@@ -1,5 +1,6 @@
 package utopia.ikbal.simplemovieapplication.extensions
 
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -12,5 +13,16 @@ fun Fragment.navigateUp() {
 
 fun Fragment.navigateTo(@IdRes destinationId: Int) {
     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        .navigate(destinationId,null,null,null)
+        .navigate(destinationId, null, null, null)
+}
+
+fun Fragment.addOnBackPressedDispatcher(onBackPressed: () -> Unit?) {
+    requireActivity().onBackPressedDispatcher.addCallback(
+        viewLifecycleOwner,
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackPressed()
+            }
+        }
+    )
 }

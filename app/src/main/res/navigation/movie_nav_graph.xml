@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_homeFragment_to_searchMovieFragment"
             app:destination="@id/searchMovieFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_loginActivity"
+            app:destination="@id/loginActivity" />
+        <action
+            android:id="@+id/action_homeFragment_to_ratedMoviesFragment"
+            app:destination="@id/ratedMoviesFragment" />
     </fragment>
 
     <fragment
@@ -20,4 +26,15 @@
         android:name="utopia.ikbal.simplemovieapplication.ui.movie.SearchMovieFragment"
         android:label="SearchMovieFragment"
         tools:layout="@layout/fragment_search_movie"/>
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="utopia.ikbal.simplemovieapplication.ui.LoginActivity"
+        android:label="activity_login"
+        app:action="navigateToLogin"
+        tools:layout="@layout/activity_login" />
+    <fragment
+        android:id="@+id/ratedMoviesFragment"
+        android:name="utopia.ikbal.simplemovieapplication.ui.movie.RatedMoviesFragment"
+        android:label="fragment_rated_movies"
+        tools:layout="@layout/fragment_rated_movies" />
 </navigation>

@@ -10,10 +10,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/rating_star_red"
-        android:searchIcon="@drawable/search_icon"
+        android:iconifiedByDefault="false"
+        android:queryHint="@string/type_something"
+        android:searchIcon="@drawable/back_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="@string/type_something" />
+
+
+    <TextView
+        android:id="@+id/text_view_no_results_found"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_24dp"
+        android:alpha="0.5"
+        android:gravity="center"
+        android:text="@string/no_results_found"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchView" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_search_movie"

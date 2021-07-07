@@ -4,36 +4,38 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_movie.*
 import utopia.ikbal.simplemovieapplication.R
-import utopia.ikbal.simplemovieapplication.data.MovieData
 import utopia.ikbal.simplemovieapplication.data.MovieFragmentType
+import utopia.ikbal.simplemovieapplication.data.model.MovieData
 import utopia.ikbal.simplemovieapplication.extensions.addOnBackPressedDispatcher
 import utopia.ikbal.simplemovieapplication.extensions.gone
 import utopia.ikbal.simplemovieapplication.extensions.isVisible
 import utopia.ikbal.simplemovieapplication.extensions.visible
+import utopia.ikbal.simplemovieapplication.ui.MovieDetailsActivity
 import utopia.ikbal.simplemovieapplication.ui.adapter.MovieAdapter
 import utopia.ikbal.simplemovieapplication.ui.adapter.OnMovieClickListener
 import utopia.ikbal.simplemovieapplication.ui.base.BaseFragment
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
 import utopia.ikbal.simplemovieapplication.util.PaginationScrollListener
 
+@AndroidEntryPoint
 class MovieFragment : BaseFragment() {
 
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var adapter: MovieAdapter
 
-    private val movieListObserver = Observer<NetworkResult<List<MovieData>?>> {
+    private val movieListObserver = Observer<NetworkResult<List<MovieData>>> {
         processNetworkResult(
             it,
             ::showLoading,
             ::hideLoading,
-            { list -> list?.let { it1 -> adapter.submitList(it1) } },
-            { showGenericError("Error") })
+            { list -> list.let { it1 -> adapter.submitList(it1) } },
+            { showGenericError(getString(R.string.something_went_wrong)) })
     }
 
     override fun onCreateView(
@@ -50,11 +52,6 @@ class MovieFragment : BaseFragment() {
         initViewModel()
         initRecyclerView()
         initObservers()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        recycler_view_fragment.adapter = null
     }
 
     private fun initSwipeRefresh() {
@@ -91,8 +88,7 @@ class MovieFragment : BaseFragment() {
         adapter = MovieAdapter(requireContext())
         adapter.movieClickListener = object : OnMovieClickListener {
             override fun onMovieClick(movieId: Int) {
-                Toast.makeText(requireContext(), "You clicked on $movieId item", Toast.LENGTH_SHORT)
-                    .show()
+                MovieDetailsActivity.launch(requireContext(), movieId)
             }
         }
         recycler_view_fragment.addOnScrollListener(object :
@@ -104,7 +100,7 @@ class MovieFragment : BaseFragment() {
             override val isLastPage: Boolean
                 get() = movieViewModel.isLastPage
             override val isLoading: Boolean
-                get() = movieViewModel.loading
+                get() = movieViewModel.movieListLiveData.value == NetworkResult.Loading
         })
         recycler_view_fragment.adapter = adapter
     }
