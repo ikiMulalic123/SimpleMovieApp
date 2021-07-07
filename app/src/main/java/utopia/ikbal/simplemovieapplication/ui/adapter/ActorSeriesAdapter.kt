@@ -19,7 +19,7 @@ class ActorSeriesAdapter(private val context: Context) :
         ActorSeriesViewHolder(R.layout.item_actor_series, parent)
 
     override fun onBindViewHolder(holder: ActorSeriesViewHolder, position: Int) {
-        getItem(position)?.let {
+        seriesList[position].let {
             holder.castClickListener = seriesClickListener
             holder.requestManager = requestManager
             holder.bind(it)
@@ -36,10 +36,5 @@ class ActorSeriesAdapter(private val context: Context) :
     fun submitList(series: List<ActorSeriesCastData>) {
         seriesList.addAll(series)
         notifyDataSetChanged()
-    }
-
-    private fun getItem(position: Int): ActorSeriesCastData? {
-        return if (position < seriesList.size) seriesList[position]
-        else null
     }
 }

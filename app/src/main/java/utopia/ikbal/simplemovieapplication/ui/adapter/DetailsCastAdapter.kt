@@ -20,7 +20,7 @@ class DetailsCastAdapter(private val context: Context) :
         DetailsCastViewHolder(R.layout.item_details_cast, parent)
 
     override fun onBindViewHolder(holder: DetailsCastViewHolder, position: Int) {
-        getItem(position)?.let {
+        castList[position].let {
             holder.castClickListener = castClickListener
             holder.requestManager = requestManager
             holder.bind(it)
@@ -37,10 +37,5 @@ class DetailsCastAdapter(private val context: Context) :
     fun submitList(casts: List<CastData>) {
         castList.addAll(casts)
         notifyDataSetChanged()
-    }
-
-    private fun getItem(position: Int): CastData? {
-        return if (position < castList.size) castList[position]
-        else null
     }
 }

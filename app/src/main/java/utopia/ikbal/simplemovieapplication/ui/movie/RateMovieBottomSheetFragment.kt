@@ -55,8 +55,8 @@ class RateMovieBottomSheetFragment : BottomSheetDialogFragment(), NetworkResultP
     }
 
     private fun rateMovieSuccession(rateMovieResponseData: RateMovieResponseData) {
-        if (rateMovieResponseData.status_code == SUCCESS ||
-            rateMovieResponseData.status_code == SUCCESSFULLY_UPDATED
+        if (rateMovieResponseData.statusCode == SUCCESS ||
+            rateMovieResponseData.statusCode == SUCCESSFULLY_UPDATED
         ) {
             ToastUtil.showShortToast(requireContext(), getString(R.string.movie_rated_successful))
         } else

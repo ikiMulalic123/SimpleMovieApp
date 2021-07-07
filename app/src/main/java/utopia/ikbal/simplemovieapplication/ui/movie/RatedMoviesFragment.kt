@@ -11,7 +11,10 @@ import kotlinx.android.synthetic.main.fragment_rated_movies.*
 import kotlinx.android.synthetic.main.toolbar_details_activity.*
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.model.RatedMovieData
-import utopia.ikbal.simplemovieapplication.extensions.*
+import utopia.ikbal.simplemovieapplication.extensions.addOnBackPressedDispatcher
+import utopia.ikbal.simplemovieapplication.extensions.gone
+import utopia.ikbal.simplemovieapplication.extensions.navigateUp
+import utopia.ikbal.simplemovieapplication.extensions.visible
 import utopia.ikbal.simplemovieapplication.ui.adapter.RatedMovieAdapter
 import utopia.ikbal.simplemovieapplication.ui.base.BaseFragment
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
@@ -45,16 +48,11 @@ class RatedMoviesFragment : BaseFragment() {
         initObserver()
     }
 
-    private fun onBackPressed() {
-        if (!linear_layout_rated_movies.isVisible()) {
-            this.navigateUp()
-        }
-    }
-
     private fun initOnBackPressedDispatcher() {
-        this.addOnBackPressedDispatcher { onBackPressed() }
-        img_details_back_button.setOnClickListener {
-            navigateUp()
+        this.addOnBackPressedDispatcher {
+            img_details_back_button.setOnClickListener {
+                navigateUp()
+            }
         }
     }
 
@@ -77,7 +75,7 @@ class RatedMoviesFragment : BaseFragment() {
             override val isLastPage: Boolean
                 get() = ratedMovieViewModel.isLastPage
             override val isLoading: Boolean
-                get() = ratedMovieViewModel.loading
+                get() = ratedMovieViewModel.ratedMovieListLiveData.value == NetworkResult.Loading
         })
         rv_rated_movies.adapter = adapter
     }

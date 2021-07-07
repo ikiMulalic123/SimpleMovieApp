@@ -23,14 +23,14 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
         MutableLiveData<NetworkResult<List<ActorMovieData>>>()
     private val _actorSeriesLiveData =
         MutableLiveData<NetworkResult<List<ActorSeriesCastData>>>()
-    private val _actorImagesLiveData = MutableLiveData<NetworkResult<List<ImageData>>>()
+    private val _actorImagesLiveData = MutableLiveData<NetworkResult<ImageData?>>()
 
     val actorLiveData: LiveData<NetworkResult<ActorData>> = _actorLiveData
     val actorMovieLiveData: LiveData<NetworkResult<List<ActorMovieData>>> =
         _actorMovieLiveData
     val actorSeriesLiveData: LiveData<NetworkResult<List<ActorSeriesCastData>>> =
         _actorSeriesLiveData
-    val actorImagesLiveData: LiveData<NetworkResult<List<ImageData>>> = _actorImagesLiveData
+    val actorImagesLiveData: LiveData<NetworkResult<ImageData?>> = _actorImagesLiveData
 
     fun getDetails(actorId: Int) {
         addToDisposable(actorMovieRepository.getActorDetails(actorId)
@@ -81,7 +81,7 @@ constructor(private val actorMovieRepository: ActorMovieRepository) : BaseViewMo
                 _actorImagesLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                _actorImagesLiveData.value = NetworkResult.Data(it.profiles)
+                _actorImagesLiveData.value = NetworkResult.Data(it.profiles.lastOrNull())
             }, {
                 _actorImagesLiveData.value = NetworkResult.Error(it)
             })

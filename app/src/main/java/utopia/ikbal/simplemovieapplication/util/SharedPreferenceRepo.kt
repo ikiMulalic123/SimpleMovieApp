@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
-import utopia.ikbal.simplemovieapplication.data.Constants.Companion.MY_SHARED_PREFERENCE
 import utopia.ikbal.simplemovieapplication.extensions.clearSharedPreferences
 import utopia.ikbal.simplemovieapplication.extensions.editSharedPreferences
 
@@ -48,6 +46,7 @@ class SharedPreferenceRepo(preferences: SharedPreferences) : NameRepository {
 
         private const val KEY_STRING_NAME = "session_id"
         private const val KEY_BOOLEAN_NAME = "isUserLogged"
+        private const val MY_SHARED_PREFERENCE = "utopia.ikbal.simplemovieapplication.preference"
 
         fun create(context: Context): SharedPreferenceRepo {
             val preferences =

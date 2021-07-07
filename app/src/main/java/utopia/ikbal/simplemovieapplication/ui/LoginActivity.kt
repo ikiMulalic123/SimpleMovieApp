@@ -9,21 +9,19 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
 import utopia.ikbal.simplemovieapplication.R
-import utopia.ikbal.simplemovieapplication.data.model.SessionData
 import utopia.ikbal.simplemovieapplication.ui.base.BaseActivity
 import utopia.ikbal.simplemovieapplication.ui.movie.LoginViewModel
 import utopia.ikbal.simplemovieapplication.util.NetworkResult
-import utopia.ikbal.simplemovieapplication.util.ToastUtil
 
 @AndroidEntryPoint
-class LoginActivity : BaseActivity(), View.OnClickListener{
+class LoginActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var loginViewModel: LoginViewModel
 
-    private val loginObserver = Observer<NetworkResult<SessionData>> {
+    private val loginObserver = Observer<NetworkResult<Unit>> {
         processNetworkResult(
             it,
-            data = { data -> checkIfLoginSucceeded(data) },
+            onLoaded = { HomeActivity.launch(this)},
             onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
@@ -48,19 +46,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener{
 
     private fun initClickListener() {
         btn_login.setOnClickListener(this)
-    }
-
-    private fun checkIfLoginSucceeded(sessionData: SessionData) {
-        if (sessionData.success == true) {
-            ToastUtil.showShortToast(this, this.getString(R.string.login_successful))
-            loginViewModel.saveBooleanToSharedPreference(true)
-            sessionData.sessionId?.let {
-                loginViewModel.saveStringToSharedPreference(it)
-            }
-            HomeActivity.launch(this)
-        } else ToastUtil.showShortToast(this, this.getString(R.string.login_failed))
-        et_username.text = null
-        et_password.text = null
     }
 
     private fun initObserver() {

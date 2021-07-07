@@ -100,7 +100,7 @@ class MovieFragment : BaseFragment() {
             override val isLastPage: Boolean
                 get() = movieViewModel.isLastPage
             override val isLoading: Boolean
-                get() = movieViewModel.loading
+                get() = movieViewModel.movieListLiveData.value == NetworkResult.Loading
         })
         recycler_view_fragment.adapter = adapter
     }

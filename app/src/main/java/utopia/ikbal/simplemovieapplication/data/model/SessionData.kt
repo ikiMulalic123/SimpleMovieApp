@@ -6,5 +6,5 @@ data class SessionData(
     @SerializedName("success")
     val success: Boolean?,
     @SerializedName("session_id")
-    val sessionId: String? = null,
+    val sessionId: String? = null
 )

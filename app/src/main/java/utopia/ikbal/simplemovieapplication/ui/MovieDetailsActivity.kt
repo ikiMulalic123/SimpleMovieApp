@@ -24,7 +24,6 @@ import utopia.ikbal.simplemovieapplication.data.Constants
 import utopia.ikbal.simplemovieapplication.data.Constants.Companion.BASE_YOUTUBE_URL
 import utopia.ikbal.simplemovieapplication.data.model.*
 import utopia.ikbal.simplemovieapplication.extensions.loadImageWithPlaceholder
-import utopia.ikbal.simplemovieapplication.extensions.visible
 import utopia.ikbal.simplemovieapplication.ui.adapter.DetailsCastAdapter
 import utopia.ikbal.simplemovieapplication.ui.adapter.DetailsReviewsAdapter
 import utopia.ikbal.simplemovieapplication.ui.adapter.OnMovieClickListener
@@ -38,7 +37,6 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class MovieDetailsActivity : BaseActivity() {
 
-    private var movieId: Int = 0
     private lateinit var detailsMovieViewModel: DetailsMovieViewModel
     private val requestManager: RequestManager by lazy { Glide.with(this) }
     private lateinit var adapterCast: DetailsCastAdapter
@@ -52,18 +50,18 @@ class MovieDetailsActivity : BaseActivity() {
         )
     }
 
-    private val videosObserver = Observer<NetworkResult<List<VideoData>>> {
+    private val videosObserver = Observer<NetworkResult<VideoData?>> {
         processNetworkResult(
             it,
-            data = { list -> list.let { data -> initializeVideo(data) } },
+            data = { video -> initializeVideo(video) },
             onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
 
-    private val imagesObserver = Observer<NetworkResult<List<ImageData>>> {
+    private val imagesObserver = Observer<NetworkResult<ImageData?>> {
         processNetworkResult(
             it,
-            data = { list -> initImage(list) },
+            data = { image -> initImage(image) },
             onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
@@ -98,41 +96,39 @@ class MovieDetailsActivity : BaseActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        movieId = intent.getIntExtra(MOVIE_ID, INVALID_ID)
-        if (movieId == -1) finish()
+        detailsMovieViewModel.movieId = intent.getIntExtra(MOVIE_ID, INVALID_ID) as Integer
+        if (detailsMovieViewModel.movieId.toInt() == INVALID_ID) finish()
         initViewModel()
     }
 
     private fun initMovieId() {
-        movieId = intent.getIntExtra(MOVIE_ID, INVALID_ID)
-        if (movieId == -1) finish()
         detailsMovieViewModel = ViewModelProvider(this).get(DetailsMovieViewModel::class.java)
+        detailsMovieViewModel.movieId = intent.getIntExtra(MOVIE_ID, INVALID_ID) as Integer
+        if (detailsMovieViewModel.movieId.toInt() == INVALID_ID) finish()
     }
 
     private fun initOnBackPressed() {
         img_details_back_button.setOnClickListener { finish() }
     }
 
-    private fun initImage(data: List<ImageData>) {
-        val imageData = data.get(0)
+    private fun initImage(image: ImageData?) {
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val height = Resources.getSystem().displayMetrics.heightPixels
         val width = Resources.getSystem().displayMetrics.widthPixels
         val ratio = width / height.toFloat()
-        val newHeight = (ratio * (imageData.height ?: 1)).roundToInt()
+        val newHeight = (ratio * (image?.height ?: 1)).roundToInt()
         img_placeholder.layoutParams = ConstraintLayout.LayoutParams(MATCH_PARENT, newHeight)
         (img_placeholder.layoutParams as ConstraintLayout.LayoutParams).topToBottom =
             R.id.toolbar_details_movie
-        img_details_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData.filePath,
+        img_details_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + image?.filePath,
             requestManager)
     }
 
-    private fun initializeVideo(data: List<VideoData>) {
-        if (data.isEmpty()) return
-        else linear_layout_img_play.visible()
-        val ytIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_url) + data[0].key))
-        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_URL + data[0].key))
+    private fun initializeVideo(video: VideoData?) {
+        val ytIntent =
+            Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_url) + video?.key))
+        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_URL + video?.key))
 
         btn_details_play.setOnClickListener {
             try {
@@ -145,14 +141,15 @@ class MovieDetailsActivity : BaseActivity() {
 
     private fun initRating() {
         tv_rate_movie.setOnClickListener {
-            RateMovieBottomSheetFragment.show(supportFragmentManager, movieId)
+            RateMovieBottomSheetFragment.show(supportFragmentManager,
+                detailsMovieViewModel.movieId.toInt())
         }
     }
 
     private fun submitDetailsData(detailsData: DetailsData) {
-        tv_details_title.text = detailsData.original_title
-        rating_bar_details.rating = detailsData.vote_average / 2
-        tv_rating_details.text = (detailsData.vote_average / 2).toString()
+        tv_details_title.text = detailsData.originalTitle
+        rating_bar_details.rating = detailsData.voteAverage / 2
+        tv_rating_details.text = (detailsData.voteAverage / 2).toString()
         tv_info_details.text = detailsData.overview
     }
 
@@ -171,24 +168,24 @@ class MovieDetailsActivity : BaseActivity() {
         rv_details_reviews.addOnScrollListener(object :
             PaginationScrollListener(rv_details_reviews.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
-                detailsMovieViewModel.getReviewsAfter(movieId)
+                detailsMovieViewModel.getReviewsAfter()
             }
 
             override val isLastPage: Boolean
                 get() = detailsMovieViewModel.isLastPage
             override val isLoading: Boolean
-                get() = detailsMovieViewModel.loading
+                get() = detailsMovieViewModel.reviewsLiveData.value == NetworkResult.Loading
         })
         rv_details_reviews.adapter = adapterReview
     }
 
     private fun initViewModel() {
         with(detailsMovieViewModel) {
-            getDetails(movieId)
-            getVideos(movieId)
-            getImages(movieId)
-            getCasts(movieId)
-            getReviews(movieId)
+            getDetails()
+            getVideos()
+            getImages()
+            getCasts()
+            getReviews()
         }
     }
 
@@ -204,7 +201,7 @@ class MovieDetailsActivity : BaseActivity() {
 
     companion object {
         const val MOVIE_ID = "movie_id"
-        private const val INVALID_ID = -1
+        const val INVALID_ID = -1
 
         private fun createLaunchIntent(context: Context, movieId: Int) =
             Intent(context, MovieDetailsActivity::class.java).apply {

@@ -30,7 +30,6 @@ constructor(
     val sharedPreferenceStringLiveData: LiveData<NetworkResult<String>> =
         _sharedPreferenceStringLiveData
 
-    var loading: Boolean = false
     var isLastPage: Boolean = false
 
     fun getRatedMovies() {
@@ -41,7 +40,6 @@ constructor(
             }
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _ratedMovieListLiveData.value = NetworkResult.Loading
             }
             .subscribe({
@@ -52,7 +50,6 @@ constructor(
                 loadAfter()
             }, {
                 _ratedMovieListLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }
@@ -64,17 +61,14 @@ constructor(
             }
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _ratedMovieListLiveData.value = NetworkResult.Loading
             }
             .subscribe({
                 _ratedMovieListLiveData.value = NetworkResult.Data(it.results)
                 isLastPage = (totalPages?.let {page <= it  } == true)
                 page++
-                loading = false
             }, {
                 _ratedMovieListLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }

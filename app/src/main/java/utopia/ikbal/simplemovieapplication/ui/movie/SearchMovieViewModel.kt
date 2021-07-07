@@ -17,7 +17,6 @@ constructor(private val movieRepository: MovieRepository) : BaseViewModel() {
 
     private val _movieListLiveData = MutableLiveData<NetworkResult<List<MovieData>>>()
     val movieListLiveData: LiveData<NetworkResult<List<MovieData>>> = _movieListLiveData
-    var loading: Boolean = false
     var page: Int = 1
     var totalPages: Int? = 1
     var isLastPage: Boolean = false
@@ -29,7 +28,6 @@ constructor(private val movieRepository: MovieRepository) : BaseViewModel() {
         addToDisposable(movieRepository.getSearchedMovies(page, query)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _movieListLiveData.value = NetworkResult.Loading
             }
             .subscribe({
@@ -44,7 +42,6 @@ constructor(private val movieRepository: MovieRepository) : BaseViewModel() {
                 }
             }, {
                 _movieListLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }
@@ -53,17 +50,14 @@ constructor(private val movieRepository: MovieRepository) : BaseViewModel() {
         addToDisposable(movieRepository.getSearchedMovies(page, query)
             .applySchedulers(scheduler)
             .doOnSubscribe {
-                loading = true
                 _movieListLiveData.value = NetworkResult.Loading
             }
             .subscribe({
                 _movieListLiveData.value = NetworkResult.Data(it.results)
                 isLastPage = (page == totalPages)
-                loading = false
                 page++
             }, {
                 _movieListLiveData.value = NetworkResult.Error(it)
-                loading = false
             })
         )
     }

@@ -19,14 +19,12 @@ constructor(
     private val sharedPreferenceRepository: SharedPreferenceRepository
 ) : BaseViewModel() {
 
-    private val _sessionLiveData = MutableLiveData<NetworkResult<SessionData>>()
+    private val _sessionLiveData = MutableLiveData<NetworkResult<Unit>>()
     private val _sharedPreferenceStringLiveData = MutableLiveData<NetworkResult<String>>()
-    private val _sharedPreferenceBooleanLiveData = MutableLiveData<NetworkResult<Boolean>>()
 
-    val sessionLiveData: LiveData<NetworkResult<SessionData>> = _sessionLiveData
+    val sessionLiveData: LiveData<NetworkResult<Unit>> = _sessionLiveData
     val sharedPreferenceStringLiveData: LiveData<NetworkResult<String>> =
         _sharedPreferenceStringLiveData
-    var loading: Boolean = false
 
     fun login(username: String, password: String) {
         addToDisposable(loginRepository.getToken()
@@ -43,40 +41,24 @@ constructor(
                 _sessionLiveData.value = NetworkResult.Loading
             }
             .subscribe({
-                _sessionLiveData.value = NetworkResult.Data(it)
+                if(it.success == true) {
+                    saveBooleanToSharedPreference(true)
+                    it.sessionId?.let { token -> saveStringToSharedPreference(token) }
+                    _sessionLiveData.value = NetworkResult.Loaded
+                } else {
+                    _sessionLiveData.value = NetworkResult.Error(Throwable())
+                }
             }, {
                 _sessionLiveData.value = NetworkResult.Error(it)
             })
         )
     }
 
-    fun saveStringToSharedPreference(name: String) {
+    private fun saveStringToSharedPreference(name: String) {
         addToDisposable(sharedPreferenceRepository.saveStringToSharedPreference(name).subscribe())
     }
 
-    fun saveBooleanToSharedPreference(name: Boolean) {
+    private fun saveBooleanToSharedPreference(name: Boolean) {
         addToDisposable(sharedPreferenceRepository.saveBooleanToSharedPreference(name).subscribe())
-    }
-
-    fun getStringFromSharedPreference() {
-        addToDisposable(sharedPreferenceRepository.getStringFromSharedPreference()
-            .subscribe({
-                _sharedPreferenceStringLiveData.value = NetworkResult.Data(it)
-            }, {
-                _sharedPreferenceStringLiveData.value = NetworkResult.Error(it)
-            }))
-    }
-
-    fun getBooleanFromSharedPreference() {
-        addToDisposable(sharedPreferenceRepository.getBooleanFromSharedPreference()
-            .subscribe({
-                _sharedPreferenceBooleanLiveData.value = NetworkResult.Data(it)
-            }, {
-                _sharedPreferenceBooleanLiveData.value = NetworkResult.Error(it)
-            }))
-    }
-
-    fun clearFromSharedPreference() {
-        addToDisposable(sharedPreferenceRepository.clearFromSharedPreference().subscribe())
     }
 }

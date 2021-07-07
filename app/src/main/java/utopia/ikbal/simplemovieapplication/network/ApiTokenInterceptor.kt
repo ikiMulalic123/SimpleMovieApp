@@ -2,7 +2,6 @@ package utopia.ikbal.simplemovieapplication.network
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import utopia.ikbal.simplemovieapplication.data.Constants.Companion.TOKEN
 
 class ApiTokenInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -17,5 +16,6 @@ class ApiTokenInterceptor : Interceptor {
 
     companion object {
         private const val API_KEY = "api_key"
+        private const val TOKEN = "d3e2a8685607404b0b0b0c92bef8c32a"
     }
 }

@@ -77,8 +77,8 @@ class SearchMovieFragment : BaseFragment() {
         progress_bar_search.gone()
     }
 
-    private fun showNoResultsFound(issue: Boolean) {
-        if (issue) {
+    private fun showNoResultsFound(haveResult: Boolean) {
+        if (haveResult) {
             text_view_no_results_found.text = getString(R.string.no_results_for_such_criteria)
         }
         text_view_no_results_found.visible()
@@ -134,7 +134,7 @@ class SearchMovieFragment : BaseFragment() {
             override val isLastPage: Boolean
                 get() = searchMovieViewModel.isLastPage
             override val isLoading: Boolean
-                get() = searchMovieViewModel.loading
+                get() = searchMovieViewModel.movieListLiveData.value == NetworkResult.Loading
         })
         recycler_view_search_movie.adapter = adapter
     }

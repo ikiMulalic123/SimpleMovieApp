@@ -19,7 +19,7 @@ class MovieAdapter(private val context: Context) :
         MovieViewHolder(R.layout.item_movie, parent)
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        getItem(position)?.let {
+        movieList[position].let {
             holder.movieClickListener = movieClickListener
             holder.requestManager = requestManager
             holder.bind(it)
@@ -41,10 +41,5 @@ class MovieAdapter(private val context: Context) :
     fun clearList() {
         movieList.clear()
         notifyDataSetChanged()
-    }
-
-    private fun getItem(position: Int): MovieData? {
-        return if (position < movieList.size) movieList[position]
-        else null
     }
 }

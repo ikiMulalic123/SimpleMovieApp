@@ -10,7 +10,7 @@ data class ReviewList(
     @SerializedName("results")
     val results: List<ReviewData>,
     @SerializedName("total_pages")
-    val total_pages: Int?,
+    val totalPages: Int?,
     @SerializedName("total_results")
-    val total_results: Int?
+    val totalResults: Int?
 )

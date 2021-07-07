@@ -7,7 +7,6 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import utopia.ikbal.simplemovieapplication.R
 import utopia.ikbal.simplemovieapplication.data.model.ReviewData
-import utopia.ikbal.simplemovieapplication.data.model.ReviewRatingData
 import utopia.ikbal.simplemovieapplication.extensions.inflate
 
 class DetailsReviewsViewHolder(@LayoutRes layout: Int, parent: ViewGroup) :
@@ -19,7 +18,7 @@ class DetailsReviewsViewHolder(@LayoutRes layout: Int, parent: ViewGroup) :
 
     fun bind(reviewData: ReviewData) {
         tvReviewName.text = reviewData.author
-        ratingBar.rating = reviewData.authorDetails.rating /2
+        ratingBar.rating = reviewData.authorDetails.rating / 2
         tvReviewInfo.text = reviewData.content
     }
 }

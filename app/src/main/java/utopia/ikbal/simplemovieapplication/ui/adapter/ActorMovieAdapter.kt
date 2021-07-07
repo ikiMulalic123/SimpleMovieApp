@@ -19,7 +19,7 @@ class ActorMovieAdapter(private val context: Context) :
         ActorMovieViewHolder(R.layout.item_actor_movies, parent)
 
     override fun onBindViewHolder(holder: ActorMovieViewHolder, position: Int) {
-        getItem(position)?.let {
+        moviesList[position].let {
             holder.movieClickListener = movieClickListener
             holder.requestManager = requestManager
             holder.bind(it)
@@ -36,10 +36,5 @@ class ActorMovieAdapter(private val context: Context) :
     fun submitList(movieMovies: List<ActorMovieData>) {
         moviesList.addAll(movieMovies)
         notifyDataSetChanged()
-    }
-    
-    private fun getItem(position: Int): ActorMovieData? {
-        return if (position < moviesList.size) moviesList[position]
-        else null
     }
 }

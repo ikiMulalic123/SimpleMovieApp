@@ -64,10 +64,10 @@ class MovieActorActivity : BaseActivity(), View.OnClickListener {
         )
     }
 
-    private val imageObserver = Observer<NetworkResult<List<ImageData>>> {
+    private val imageObserver = Observer<NetworkResult<ImageData?>> {
         processNetworkResult(
             it,
-            data = { data -> initImages(data) },
+            data = {image -> initImages(image)},
             onError = { showGenericError(getString(R.string.something_went_wrong)) }
         )
     }
@@ -93,23 +93,22 @@ class MovieActorActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun submitDetails(data: ActorData) {
-        img_actor.load(Constants.BASE_IMAGE_URL + data.profile_path, requestManager)
+        img_actor.load(Constants.BASE_IMAGE_URL + data.profilePath, requestManager)
         tv_actor_title.text = data.name
-        tv_known_for_actor.text = data.known_for_department
+        tv_known_for_actor.text = data.knownForDepartment
         tv_actor_info.text = data.biography
     }
 
-    private fun initImages(data: List<ImageData>) {
-        val imageData = data.get(0)
+    private fun initImages(imageData: ImageData?) {
         val height = Resources.getSystem().displayMetrics.heightPixels
         val width = Resources.getSystem().displayMetrics.widthPixels
         val ratio = width / height.toFloat()
-        val newHeight = (ratio * (imageData.height ?: 1)).roundToInt()
+        val newHeight = (ratio * (imageData?.height ?: DEFAULT_HEIGHT)).roundToInt()
         img_placeholder_actor.layoutParams =
             ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, newHeight)
         (img_placeholder_actor.layoutParams as ConstraintLayout.LayoutParams).topToBottom =
             R.id.toolbar_actor_movie
-        img_cast_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData.filePath,
+        img_cast_poster.loadImageWithPlaceholder(Constants.BASE_ORIGINAL_IMAGE_URL + imageData?.filePath,
             requestManager)
     }
 
@@ -140,7 +139,7 @@ class MovieActorActivity : BaseActivity(), View.OnClickListener {
 
     private fun initViewModel() {
         val castId = intent.getIntExtra(CAST_ID, INVALID_ID)
-        if (castId == -1) finish()
+        if (castId == INVALID_ID) finish()
         requestManager = Glide.with(this)
         actorMovieViewModel = ViewModelProvider(this).get(ActorMovieViewModel::class.java)
         with(actorMovieViewModel) {
@@ -153,6 +152,7 @@ class MovieActorActivity : BaseActivity(), View.OnClickListener {
 
     companion object {
         const val CAST_ID = "cast_id"
+        private const val DEFAULT_HEIGHT = 1
         private const val INVALID_ID = -1
 
         private fun createLaunchIntent(context: Context, castId: Int) =

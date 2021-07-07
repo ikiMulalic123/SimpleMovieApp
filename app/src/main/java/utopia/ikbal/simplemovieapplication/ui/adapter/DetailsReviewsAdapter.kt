@@ -13,7 +13,7 @@ class DetailsReviewsAdapter : RecyclerView.Adapter<DetailsReviewsViewHolder>() {
         DetailsReviewsViewHolder(R.layout.item_details_reviews, parent)
 
     override fun onBindViewHolder(holder: DetailsReviewsViewHolder, position: Int) {
-        getItem(position)?.let {
+        reviewsList[position].let {
             holder.bind(it)
         }
     }
@@ -23,10 +23,5 @@ class DetailsReviewsAdapter : RecyclerView.Adapter<DetailsReviewsViewHolder>() {
     fun submitList(reviews: List<ReviewData>) {
         reviewsList.addAll(reviews)
         notifyDataSetChanged()
-    }
-
-    private fun getItem(position: Int): ReviewData? {
-        return if (position < reviewsList.size) reviewsList[position]
-        else null
     }
 }

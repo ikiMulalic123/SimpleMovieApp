@@ -6,9 +6,7 @@ data class DetailsData(
     @SerializedName("adult")
     val adult: Boolean,
     @SerializedName("backdrop_path")
-    val backdrop_path: String? = null,
-    @SerializedName("belongs_to_collection")
-    val belongs_to_collection: Any?,
+    val backdropPath: String? = null,
     @SerializedName("budget")
     val budget: Float,
     @SerializedName("genres")
@@ -18,29 +16,23 @@ data class DetailsData(
     @SerializedName("id")
     val id: Int,
     @SerializedName("imdb_id")
-    val imdb_id: String? = null,
+    val imdbId: String? = null,
     @SerializedName("original_language")
-    val original_language: String? = null,
+    val originalLanguage: String? = null,
     @SerializedName("original_title")
-    val original_title: String? = null,
+    val originalTitle: String? = null,
     @SerializedName("overview")
     val overview: String? = null,
     @SerializedName("popularity")
     val popularity: Float,
     @SerializedName("poster_path")
-    val poster_path: String? = null,
-    @SerializedName("production_companies")
-    var production_companies: List<Any>?,
-    @SerializedName("production_countries")
-    var production_countries: List<Any>?,
+    val posterPath: String? = null,
     @SerializedName("release_date")
-    val release_date: String? = null,
+    val releaseDate: String? = null,
     @SerializedName("revenue")
     val revenue: Float,
     @SerializedName("runtime")
     val runtime: Float,
-    @SerializedName("spoken_languages")
-    var spoken_languages: List<Any>?,
     @SerializedName("status")
     val status: String? = null,
     @SerializedName("tagline")
@@ -50,7 +42,7 @@ data class DetailsData(
     @SerializedName("video")
     val video: Boolean,
     @SerializedName("vote_average")
-    val vote_average: Float,
+    val voteAverage: Float,
     @SerializedName("vote_count")
-    val vote_count: Float,
+    val voteCount: Float
 )
